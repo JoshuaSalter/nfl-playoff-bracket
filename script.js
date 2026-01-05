@@ -98,18 +98,14 @@ function updateDivisional(conf) {
 // ===============================
 // UPDATE CONFERENCE (SAFE)
 // ===============================
-function updateConferenceSlot(conf, divGameId, winner) {
+function updateConferenceSlot(conf, winner) {
   const confMatchup = conf === 'afc'
     ? document.querySelector('[data-game="AFC-Conf"]')
     : document.querySelector('[data-game="NFC-Conf"]');
 
-  const slotIndex =
-    (conf === 'afc' && divGameId === 'AFC-D1') ||
-    (conf === 'nfc' && divGameId === 'NFC-D1')
-      ? 0
-      : 1;
-
+  // Get existing team slots
   let slots = Array.from(confMatchup.querySelectorAll('.team'));
+
   // Ensure 2 slots exist
   while (slots.length < 2) {
     const emptySlot = document.createElement('div');
@@ -118,7 +114,11 @@ function updateConferenceSlot(conf, divGameId, winner) {
     slots.push(emptySlot);
   }
 
-  // Replace the correct slot without overwriting the other
+  // Find first empty slot
+  let slotIndex = slots.findIndex(s => s.classList.contains('empty'));
+  if (slotIndex === -1) slotIndex = 0; // fallback to slot 0
+
+  // Replace empty slot with winner
   slots[slotIndex].replaceWith(
     createTeamElement(
       winner.name,
@@ -127,9 +127,10 @@ function updateConferenceSlot(conf, divGameId, winner) {
     )
   );
 
-  // Update state: store **both winners** if applicable
+  // Update state
   state[conf].conference[slotIndex] = { ...winner, game: 'conference' };
 }
+
 
 
 // ===============================
