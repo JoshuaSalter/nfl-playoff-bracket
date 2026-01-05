@@ -61,10 +61,13 @@ body {
    TEAM BOX
 ========================= */
 .team {
-  display: flex;
   align-items: center;
-  gap: 8px;               /* space between logo and text */
+  display: flex; 
+  gap: 8px;
   padding: 8px 10px;
+  max-width: 200px;      /* prevents matchup from expanding */
+  overflow: hidden;      /* hides anything outside */
+  box-sizing: border-box;
   margin: 3px 0;
   border-radius: 4px;
   cursor: pointer;
@@ -75,10 +78,15 @@ body {
 
 /* Team logo */
 .team img {
-  width: 24px;            /* logo size */
-  height: 24px;
-  object-fit: contain;    /* preserve aspect ratio */
-  flex-shrink: 0;         /* prevents logo from shrinking */
+  width: 24px;          /* fixed width */
+  height: 24px;         /* fixed height */
+  max-width: 100%;      /* ensures it doesn’t overflow container */
+  max-height: 100%;
+  object-fit: contain;   /* keeps aspect ratio */
+  flex-shrink: 0;        /* prevents squishing */
+  display: block;        /* removes inline spacing issues */
+}
+
 }
 
 /* Team name text */
@@ -132,6 +140,16 @@ body {
   }
 
   .matchup {
-    width: 180px;
-  }
+  width: 200px;
+  min-width: 200px;      /* ensures consistent width */
+  max-width: 200px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  background: #fff;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-sizing: border-box;
+}
 }
