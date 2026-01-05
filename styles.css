@@ -8,9 +8,9 @@ body {
 
 #bracket {
   display: grid;
-  grid-template-columns: repeat(4, 220px);
-  grid-template-rows: repeat(8, 80px); /* 8 rows for Wild Card spacing */
-  gap: 20px;
+  grid-template-columns: repeat(4, 220px); /* 4 rounds */
+  grid-template-rows: repeat(15, 60px);   /* enough rows for proper spacing */
+  gap: 10px;
 }
 
 /* Round labels */
@@ -18,9 +18,7 @@ body {
   text-align: center;
   font-size: 18px;
   font-weight: bold;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  margin-bottom: 10px;
 }
 
 /* Matchup boxes */
@@ -32,9 +30,7 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center; /* center vertically and horizontally */
   padding: 5px;
-  margin: 0 auto; /* center in column */
 }
 
 /* Teams */
@@ -49,7 +45,6 @@ body {
   font-size: 14px;
   border: 1px solid #ccc;
   background-color: #fafafa;
-  transition: background 0.2s, border 0.2s;
 }
 
 .team.selected {
@@ -63,15 +58,19 @@ body {
   background-color: #e0f0ff;
 }
 
-.team img {
-  width: 30px;
-  height: 30px;
-  object-fit: contain;
-}
+/* ===== Alignment tweaks ===== */
 
-/* Center Divisional, Conference, and Super Bowl matchups vertically between previous round matchups */
-.matchup[style*="grid-column:2"],
-.matchup[style*="grid-column:3"],
-.matchup[style*="grid-column:4"] {
-  align-self: center;
-}
+/* Wild Card rows stay as they are */
+
+/* Divisional rounds centered between Wild Card */
+[data-game="AFC-D1"] { grid-row: 1 / span 4; justify-self: center; }
+[data-game="AFC-D2"] { grid-row: 5 / span 4; justify-self: center; }
+[data-game="NFC-D1"] { grid-row: 8 / span 4; justify-self: center; }
+[data-game="NFC-D2"] { grid-row: 12 / span 4; justify-self: center; }
+
+/* Conference rounds centered between Divisional */
+[data-game="AFC-Conf"] { grid-row: 3 / span 6; justify-self: center; }
+[data-game="NFC-Conf"] { grid-row: 10 / span 6; justify-self: center; }
+
+/* Super Bowl centered vertically */
+[data-game="SB"] { grid-row: 5 / span 10; justify-self: center; }
