@@ -6,36 +6,56 @@ body {
   padding: 20px;
 }
 
+/* Main bracket grid */
 #bracket {
   display: grid;
   grid-template-columns: repeat(4, 220px);
-  gap: 20px; /* tight columns */
+  grid-template-rows: repeat(8, 60px); /* 8 rows for wild card spacing */
+  gap: 20px; /* space between columns */
 }
 
-/* Round container */
-.round {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
+/* Round headings */
 .round h2 {
   text-align: center;
   font-size: 18px;
   margin-bottom: 15px;
+  grid-column: span 4;
 }
 
 /* Matchup boxes */
 .matchup {
-  width: 200px; /* same width for all matchups */
+  width: 200px;
   border: 2px solid #ddd;
   border-radius: 8px;
-  margin: 10px 0;
   padding: 5px;
   background-color: #fff;
   display: flex;
   flex-direction: column;
+  justify-content: center;
 }
+
+/* Wild Card – explicitly place rows */
+.round-1 .matchup:nth-child(1) { grid-row: 1; }
+.round-1 .matchup:nth-child(2) { grid-row: 2; }
+.round-1 .matchup:nth-child(3) { grid-row: 3; }
+.round-1 .matchup:nth-child(4) { grid-row: 4; }
+.round-1 .matchup:nth-child(5) { grid-row: 5; }
+.round-1 .matchup:nth-child(6) { grid-row: 6; }
+.round-1 .matchup:nth-child(7) { grid-row: 7; }
+.round-1 .matchup:nth-child(8) { grid-row: 8; }
+
+/* Divisional round – span 2 rows to center with feed */
+.round-2 .matchup[data-game="AFC-D1"] { grid-row: 1 / span 2; }
+.round-2 .matchup[data-game="AFC-D2"] { grid-row: 3 / span 2; }
+.round-2 .matchup[data-game="NFC-D2"] { grid-row: 5 / span 2; }
+.round-2 .matchup[data-game="NFC-D1"] { grid-row: 7 / span 2; }
+
+/* Conference round – span 4 rows to center with feed */
+.round-3 .matchup[data-game="AFC-Conf"] { grid-row: 1 / span 4; }
+.round-3 .matchup[data-game="NFC-Conf"] { grid-row: 5 / span 4; }
+
+/* Super Bowl – span all rows */
+.round-4 .matchup[data-game="SB"] { grid-row: 1 / span 8; }
 
 /* Team boxes */
 .team {
@@ -49,6 +69,7 @@ body {
   font-size: 14px;
   border: 1px solid #ccc;
   background-color: #fafafa;
+  justify-content: flex-start;
 }
 
 .team.selected {
@@ -67,5 +88,3 @@ body {
   height: 30px;
   object-fit: contain;
 }
-
-/* Optional connecting lines can be added later */
