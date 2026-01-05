@@ -207,10 +207,28 @@ document.querySelectorAll('.team').forEach(team =>
   team.addEventListener('click', () => handleTeamClick(team))
 );
 
-// ===============================
-// PRINT BRACKET
-// ===============================
-document.getElementById('printBracket').addEventListener('click', () => {
-  window.print();
-});
+document.getElementById('share-btn').addEventListener('click', async () => {
+  // Build a simple text summary of your bracket
+  const afcConf = state.afc.conference.map(t => `#${t.seed} ${t.name}`).join(' vs ');
+  const nfcConf = state.nfc.conference.map(t => `#${t.seed} ${t.name}`).join(' vs ');
+  const sb = state.afc.conference[0] && state.nfc.conference[0]
+    ? `Super Bowl: #${state.afc.conference[0].seed} ${state.afc.conference[0].name} vs #${state.nfc.conference[0].seed} ${state.nfc.conference[0].name}`
+    : 'Super Bowl: TBD';
 
+  const shareData = {
+    title: 'My 2026 NFL Bracket',
+    text: `AFC: ${afcConf}\nNFC: ${nfcConf}\n${sb}`,
+    url: window.location.href // optional: share the current page link
+  };
+
+  try {
+    if (navigator.share) {
+      await navigator.share(shareData);
+      console.log('Bracket shared successfully!');
+    } else {
+      alert('Your browser does not support sharing. Copy this text instead:\n\n' + shareData.text);
+    }
+  } catch (err) {
+    console.error('Error sharing:', err);
+  }
+});
