@@ -31,7 +31,7 @@ body {
   flex-direction: column;
   justify-content: center;
   gap: 30px;
-  min-height: 600px; /* THIS is the secret sauce */
+  min-height: 800px; /* THIS is the secret sauce */
 }
 
 /* Matchup box */
