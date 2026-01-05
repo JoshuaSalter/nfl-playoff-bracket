@@ -9,41 +9,82 @@
 <body>
 
 <div id="bracket">
-  <!-- Round 1: Wild Card -->
-  <div class="round round-1">
-    <h2>Wild Card</h2>
-    <div class="matchup" data-game="AFC1"><div class="team" data-team="AFC1">AFC 1</div><div class="team" data-team="AFC8">AFC 8</div></div>
-    <div class="matchup" data-game="AFC2"><div class="team" data-team="AFC2">AFC 2</div><div class="team" data-team="AFC7">AFC 7</div></div>
-    <div class="matchup" data-game="AFC3"><div class="team" data-team="AFC3">AFC 3</div><div class="team" data-team="AFC6">AFC 6</div></div>
-    <div class="matchup" data-game="AFC4"><div class="team" data-team="AFC4">AFC 4</div><div class="team" data-team="AFC5">AFC 5</div></div>
 
-    <div class="matchup" data-game="NFC4"><div class="team" data-team="NFC4">NFC 4</div><div class="team" data-team="NFC5">NFC 5</div></div>
-    <div class="matchup" data-game="NFC3"><div class="team" data-team="NFC3">NFC 3</div><div class="team" data-team="NFC6">NFC 6</div></div>
-    <div class="matchup" data-game="NFC2"><div class="team" data-team="NFC2">NFC 2</div><div class="team" data-team="NFC7">NFC 7</div></div>
-    <div class="matchup" data-game="NFC1"><div class="team" data-team="NFC1">NFC 1</div><div class="team" data-team="NFC8">NFC 8</div></div>
+  <!-- Round headings -->
+  <div class="round-label" style="grid-column:1;">Wild Card</div>
+  <div class="round-label" style="grid-column:2;">Divisional</div>
+  <div class="round-label" style="grid-column:3;">Conference</div>
+  <div class="round-label" style="grid-column:4;">Super Bowl</div>
+
+  <!-- ===== Round 1: Wild Card ===== -->
+  <div class="matchup" style="grid-column:1; grid-row:1;">
+    <div class="team" data-team="AFC1">AFC 1</div>
+    <div class="team" data-team="AFC8">AFC 8</div>
+  </div>
+  <div class="matchup" style="grid-column:1; grid-row:2;">
+    <div class="team" data-team="AFC2">AFC 2</div>
+    <div class="team" data-team="AFC7">AFC 7</div>
+  </div>
+  <div class="matchup" style="grid-column:1; grid-row:3;">
+    <div class="team" data-team="AFC3">AFC 3</div>
+    <div class="team" data-team="AFC6">AFC 6</div>
+  </div>
+  <div class="matchup" style="grid-column:1; grid-row:4;">
+    <div class="team" data-team="AFC4">AFC 4</div>
+    <div class="team" data-team="AFC5">AFC 5</div>
   </div>
 
-  <!-- Round 2: Divisional -->
-  <div class="round round-2">
-    <h2>Divisional</h2>
-    <div class="matchup" data-game="AFC-D1"><div class="team"></div><div class="team"></div></div>
-    <div class="matchup" data-game="AFC-D2"><div class="team"></div><div class="team"></div></div>
-    <div class="matchup" data-game="NFC-D2"><div class="team"></div><div class="team"></div></div>
-    <div class="matchup" data-game="NFC-D1"><div class="team"></div><div class="team"></div></div>
+  <div class="matchup" style="grid-column:1; grid-row:5;">
+    <div class="team" data-team="NFC4">NFC 4</div>
+    <div class="team" data-team="NFC5">NFC 5</div>
+  </div>
+  <div class="matchup" style="grid-column:1; grid-row:6;">
+    <div class="team" data-team="NFC3">NFC 3</div>
+    <div class="team" data-team="NFC6">NFC 6</div>
+  </div>
+  <div class="matchup" style="grid-column:1; grid-row:7;">
+    <div class="team" data-team="NFC2">NFC 2</div>
+    <div class="team" data-team="NFC7">NFC 7</div>
+  </div>
+  <div class="matchup" style="grid-column:1; grid-row:8;">
+    <div class="team" data-team="NFC1">NFC 1</div>
+    <div class="team" data-team="NFC8">NFC 8</div>
   </div>
 
-  <!-- Round 3: Conference -->
-  <div class="round round-3">
-    <h2>Conference</h2>
-    <div class="matchup" data-game="AFC-Conf"><div class="team"></div><div class="team"></div></div>
-    <div class="matchup" data-game="NFC-Conf"><div class="team"></div><div class="team"></div></div>
+  <!-- ===== Round 2: Divisional ===== -->
+  <div class="matchup" style="grid-column:2; grid-row:1 / span 2;" data-game="AFC-D1">
+    <div class="team"></div>
+    <div class="team"></div>
+  </div>
+  <div class="matchup" style="grid-column:2; grid-row:3 / span 2;" data-game="AFC-D2">
+    <div class="team"></div>
+    <div class="team"></div>
+  </div>
+  <div class="matchup" style="grid-column:2; grid-row:5 / span 2;" data-game="NFC-D2">
+    <div class="team"></div>
+    <div class="team"></div>
+  </div>
+  <div class="matchup" style="grid-column:2; grid-row:7 / span 2;" data-game="NFC-D1">
+    <div class="team"></div>
+    <div class="team"></div>
   </div>
 
-  <!-- Round 4: Super Bowl -->
-  <div class="round round-4">
-    <h2>Super Bowl</h2>
-    <div class="matchup" data-game="SB"><div class="team"></div><div class="team"></div></div>
+  <!-- ===== Round 3: Conference ===== -->
+  <div class="matchup" style="grid-column:3; grid-row:1 / span 4;" data-game="AFC-Conf">
+    <div class="team"></div>
+    <div class="team"></div>
   </div>
+  <div class="matchup" style="grid-column:3; grid-row:5 / span 4;" data-game="NFC-Conf">
+    <div class="team"></div>
+    <div class="team"></div>
+  </div>
+
+  <!-- ===== Round 4: Super Bowl ===== -->
+  <div class="matchup" style="grid-column:4; grid-row:1 / span 8;" data-game="SB">
+    <div class="team"></div>
+    <div class="team"></div>
+  </div>
+
 </div>
 
 <script>
@@ -52,7 +93,7 @@ function propagateWinner(matchup, selectedTeam) {
   let nextMatchup, slotIndex;
 
   // AFC logic
-  if (gameId.startsWith('AFC')) {
+  if (gameId?.startsWith('AFC')) {
     if (gameId.includes('1') || gameId.includes('2')) nextMatchup = document.querySelector('[data-game="AFC-D1"]');
     else if (gameId.includes('3') || gameId.includes('4')) nextMatchup = document.querySelector('[data-game="AFC-D2"]');
     else if (gameId.includes('D1') || gameId.includes('D2')) nextMatchup = document.querySelector('[data-game="AFC-Conf"]');
@@ -60,7 +101,7 @@ function propagateWinner(matchup, selectedTeam) {
   }
 
   // NFC logic
-  if (gameId.startsWith('NFC')) {
+  if (gameId?.startsWith('NFC')) {
     if (gameId.includes('1') || gameId.includes('2')) nextMatchup = document.querySelector('[data-game="NFC-D1"]');
     else if (gameId.includes('3') || gameId.includes('4')) nextMatchup = document.querySelector('[data-game="NFC-D2"]');
     else if (gameId.includes('D1') || gameId.includes('D2')) nextMatchup = document.querySelector('[data-game="NFC-Conf"]');
@@ -68,7 +109,7 @@ function propagateWinner(matchup, selectedTeam) {
   }
 
   // Conference -> Super Bowl
-  if (gameId.includes('Conf')) nextMatchup = document.querySelector('[data-game="SB"]');
+  if (gameId?.includes('Conf')) nextMatchup = document.querySelector('[data-game="SB"]');
 
   if (!nextMatchup) return;
 
