@@ -61,25 +61,34 @@ function updateDivisional(conf) {
     ? [document.querySelector('[data-game="AFC-D1"]'), document.querySelector('[data-game="AFC-D2"]')]
     : [document.querySelector('[data-game="NFC-D1"]'), document.querySelector('[data-game="NFC-D2"]')];
 
-  // Clear non-first-seed slots
-  divMatchups.forEach(m => {
-    while (m.firstChild) m.removeChild(m.firstChild);
-  });
-
   if (winners.length === 0) return;
 
   const first = firstSeed[conf];
   const lowest = winners[winners.length - 1];
   const remaining = winners.filter(t => t.name !== lowest.name);
 
-  // First seed vs lowest seed
-  divMatchups[0].appendChild(createTeamElement(first.name, first.seed, first.logo));
-  divMatchups[0].appendChild(createTeamElement(lowest.name, lowest.seed, `logos/${lowest.name.toLowerCase()}.svg`));
+  // === DIV 1: first seed vs lowest ===
+  const div1 = divMatchups[0];
 
-  // Remaining two teams
-  if (remaining[0]) divMatchups[1].appendChild(createTeamElement(remaining[0].name, remaining[0].seed, `logos/${remaining[0].name.toLowerCase()}.svg`));
-  if (remaining[1]) divMatchups[1].appendChild(createTeamElement(remaining[1].name, remaining[1].seed, `logos/${remaining[1].name.toLowerCase()}.svg`));
+  // Preserve first seed if already set
+  if (!div1.children[0] || !div1.children[0].dataset.team) {
+    div1.insertBefore(
+      createTeamElement(first.name, first.seed, first.logo),
+      div1.children[0] || null
+    );
+  }
+
+  // Update lowest seed slot
+  if (div1.children[1]) div1.removeChild(div1.children[1]);
+  div1.appendChild(createTeamElement(lowest.name, lowest.seed, `logos/${lowest.name.toLowerCase()}.svg`));
+
+  // === DIV 2: remaining two teams ===
+  const div2 = divMatchups[1];
+  div2.innerHTML = ''; // clear old teams
+  if (remaining[0]) div2.appendChild(createTeamElement(remaining[0].name, remaining[0].seed, `logos/${remaining[0].name.toLowerCase()}.svg`));
+  if (remaining[1]) div2.appendChild(createTeamElement(remaining[1].name, remaining[1].seed, `logos/${remaining[1].name.toLowerCase()}.svg`));
 }
+
 
 // ===============================
 // UPDATE CONFERENCE SLOT
