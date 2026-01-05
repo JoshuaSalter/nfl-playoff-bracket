@@ -9,7 +9,7 @@ body {
 #bracket {
   display: grid;
   grid-template-columns: repeat(4, 220px);
-  grid-template-rows: repeat(14, 40px); /* 14 rows for fine-grained spacing */
+  grid-template-rows: repeat(20, 40px); /* 20 fine-grained rows for vertical centering */
   gap: 10px;
   text-align: center;
 }
@@ -64,20 +64,20 @@ body {
 
 /* ===== Centering rounds precisely ===== */
 
-/* Wild Card */
+/* Wild Card - each in its own row */
 [data-game^="AFC-WC"] { justify-self: center; }
 [data-game^="NFC-WC"] { justify-self: center; }
 
-/* Divisional - precisely centered between Wild Card matchups */
-[data-game="AFC-D1"] { grid-row: 1.5 / span 3; justify-self: center; }
-[data-game="AFC-D2"] { grid-row: 4.5 / span 3; justify-self: center; }
+/* Divisional - centered between Wild Card matchups */
+[data-game="AFC-D1"] { grid-row: 2 / span 3; justify-self: center; }  /* between WC1 & WC2 */
+[data-game="AFC-D2"] { grid-row: 5 / span 3; justify-self: center; }  /* between WC2 & WC3 */
 
-[data-game="NFC-D1"] { grid-row: 8.5 / span 3; justify-self: center; }
-[data-game="NFC-D2"] { grid-row: 11.5 / span 3; justify-self: center; }
+[data-game="NFC-D1"] { grid-row: 12 / span 3; justify-self: center; } /* between WC1 & WC2 */
+[data-game="NFC-D2"] { grid-row: 15 / span 3; justify-self: center; } /* between WC2 & WC3 */
 
 /* Conference - centered between Divisional matchups */
-[data-game="AFC-Conf"] { grid-row: 2.5 / span 5; justify-self: center; }
-[data-game="NFC-Conf"] { grid-row: 9 / span 5; justify-self: center; }
+[data-game="AFC-Conf"] { grid-row: 3.5 / span 6; justify-self: center; }
+[data-game="NFC-Conf"] { grid-row: 13 / span 6; justify-self: center; }
 
 /* Super Bowl - centered between Conferences */
-[data-game="SB"] { grid-row: 5 / span 6; justify-self: center; }
+[data-game="SB"] { grid-row: 7 / span 10; justify-self: center; }
