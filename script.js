@@ -188,17 +188,23 @@ document.querySelectorAll('.team').forEach(team => {
 document.getElementById('share-btn').addEventListener('click', async () => {
   const bracketEl = document.getElementById('bracket');
 
-  html2canvas(bracketEl, { backgroundColor: '#fff' }).then(canvas => {
+  html2canvas(bracketEl, { 
+    backgroundColor: '#fff',  // keep white background
+    useCORS: true,            // ✅ load external images (like SVGs)
+    imageTimeout: 3000        // wait up to 3s for images to load
+  }).then(canvas => {
     canvas.toBlob(async blob => {
       const file = new File([blob], 'NFL-Bracket-2026.png', { type: 'image/png' });
 
       if (navigator.canShare && navigator.canShare({ files: [file] })) {
         try {
           await navigator.share({ files: [file], title: 'My 2026 NFL Bracket' });
+          console.log('Bracket shared successfully!');
         } catch (err) {
           console.error('Error sharing:', err);
         }
       } else {
+        // Fallback: download image
         const link = document.createElement('a');
         link.href = URL.createObjectURL(file);
         link.download = 'NFL-Bracket-2026.png';
