@@ -1,94 +1,114 @@
 const state = {
-  afc: {
-    wildCardWinners: [],
-    divisionalWinners: []
-  },
-  nfc: {
-    wildCardWinners: [],
-    divisionalWinners: []
-  }
+  afc: { wildCard: [], divisional: [], conference: [] },
+  nfc: { wildCard: [], divisional: [], conference: [] }
 };
 
-document.querySelectorAll(".game").forEach(game => {
-  const teams = game.querySelectorAll(".team");
+// Helper to get next matchup based on round
+const nextMatchupMap = {
+  "AFC1": "AFC-D1",
+  "AFC2": "AFC-D1",
+  "AFC3": "AFC-D2",
+  "AFC4": "AFC-D2",
+  "AFC-D1": "AFC-Conf",
+  "AFC-D2": "AFC-Conf",
+  "AFC-Conf": "SB",
+  "NFC1": "NFC-D1",
+  "NFC2": "NFC-D1",
+  "NFC3": "NFC-D2",
+  "NFC4": "NFC-D2",
+  "NFC5": "NFC-D2",
+  "NFC6": "NFC-D2",
+  "NFC7": "NFC-D1",
+  "NFC8": "NFC-D1",
+  "NFC-D1": "NFC-Conf",
+  "NFC-D2": "NFC-Conf",
+  "NFC-Conf": "SB"
+};
 
-  teams.forEach(team => {
-    team.addEventListener("click", () => {
-      teams.forEach(t => t.classList.remove("winner"));
-      team.classList.add("winner");
+// Add click events to all teams
+document.querySelectorAll(".team").forEach(team => {
+  team.addEventListener("click", () => {
+    const matchup = team.parentElement;
+    const gameId = matchup.dataset.game;
+    const conf = gameId.startsWith("AFC") ? "afc" : "nfc";
+    const seed = parseInt(team.dataset.seed);
+    const name = team.textContent;
 
-      const conf = team.dataset.conf;
-      const seed = parseInt(team.dataset.seed);
-      const name = team.textContent;
+    // Deselect other team in this matchup
+    matchup.querySelectorAll(".team").forEach(t => t.classList.remove("selected"));
+    team.classList.add("selected");
 
-      // Remove previous selection from this game
-      state[conf].wildCardWinners =
-        state[conf].wildCardWinners.filter(t => t.game !== game);
+    // Update state
+    if (gameId.includes("D") || gameId.includes("Conf") || gameId === "SB") {
+      // Divisional or Conference or SB
+      state[conf].divisional = state[conf].divisional.filter(t => t.game !== gameId);
+      state[conf].conference = state[conf].conference.filter(t => t.game !== gameId);
+    } else {
+      // Wild Card
+      state[conf].wildCard = state[conf].wildCard.filter(t => t.game !== gameId);
+      state[conf].wildCard.push({ name, seed, game: gameId });
+    }
 
-      state[conf].wildCardWinners.push({
-        name,
-        seed,
-        game
-      });
-
-      if (state[conf].wildCardWinners.length === 3) {
-        runDivisional(conf);
-      }
-    });
+    advanceTeam(conf, gameId, { name, seed });
   });
 });
 
-function runDivisional(conf) {
-  const winners = [...state[conf].wildCardWinners]
-    .sort((a, b) => a.seed - b.seed); // lowest seed = highest priority
+// Function to advance a team to next round
+function advanceTeam(conf, gameId, team) {
+  const nextGame = nextMatchupMap[gameId];
+  if (!nextGame) return;
 
-  const byeTeam = conf === "afc"
-    ? { name: "Ravens", seed: 1 }
-    : { name: "49ers", seed: 1 };
+  const slot = document.querySelector(`[data-game='${nextGame}']`);
+  if (!slot) return;
 
-  const lowestSeed = winners[winners.length - 1];
-  const remaining = winners.slice(0, 2);
+  // Determine which slot to fill based on seed
+  const children = slot.querySelectorAll(".team");
+  if (!children[0].textContent) {
+    children[0].textContent = team.name;
+    children[0].dataset.seed = team.seed;
+    children[0].dataset.conf = conf;
+  } else {
+    children[1].textContent = team.name;
+    children[1].dataset.seed = team.seed;
+    children[1].dataset.conf = conf;
+  }
 
-  // #1 seed vs lowest
-  setSlot(`${conf}-div-3`, byeTeam.name, byeTeam.seed);
-  setSlot(`${conf}-div-1`, lowestSeed.name, lowestSeed.seed);
+  // Save in state for Divisional / Conference rounds
+  if (nextGame.includes("D")) {
+    state[conf].divisional.push({ name: team.name, seed: team.seed, game: nextGame });
+  } else if (nextGame.includes("Conf")) {
+    state[conf].conference.push({ name: team.name, seed: team.seed, game: nextGame });
+  }
 
-  // Other matchup
-  setSlot(`${conf}-div-2`, remaining[0].name, remaining[0].seed);
-}
+  // If both teams are set in Divisional or Conference, reseed
+  if (nextGame.includes("D") && state[conf].divisional.filter(t => t.game === nextGame).length === 2) {
+    reseedMatchup(slot, conf);
+  }
+  if (nextGame.includes("Conf") && state[conf].conference.filter(t => t.game === nextGame).length === 2) {
+    reseedMatchup(slot, conf);
+  }
 
-function setSlot(id, name, seed) {
-  const slot = document.getElementById(id);
-  slot.textContent = `#${seed} ${name}`;
-  slot.dataset.seed = seed;
-  slot.dataset.conf = id.startsWith("afc") ? "afc" : "nfc";
+  // If Conference matchups are done, update Super Bowl automatically
+  if (nextGame === "SB") {
+    // Check both AFC and NFC sides
+    const sbSlot = document.querySelector("[data-game='SB']");
+    const afcWinner = document.querySelector("[data-game='AFC-Conf'] .team.selected");
+    const nfcWinner = document.querySelector("[data-game='NFC-Conf'] .team.selected");
 
-  slot.onclick = () => handleDivisionalWin(slot);
-}
-
-function handleDivisionalWin(slot) {
-  const conf = slot.dataset.conf;
-  const seed = parseInt(slot.dataset.seed);
-  const name = slot.textContent.replace(/^#\d+\s/, "");
-
-  state[conf].divisionalWinners.push({ name, seed });
-
-  if (state[conf].divisionalWinners.length === 2) {
-    runConference(conf);
+    if (afcWinner) sbSlot.children[0].textContent = afcWinner.textContent;
+    if (nfcWinner) sbSlot.children[1].textContent = nfcWinner.textContent;
   }
 }
 
-function runConference(conf) {
-  const winners = state[conf].divisionalWinners
-    .sort((a, b) => a.seed - b.seed);
+// Reseeding function: lowest seed vs highest seed
+function reseedMatchup(matchupSlot, conf) {
+  const teams = Array.from(matchupSlot.querySelectorAll(".team"));
+  const seeds = teams.map(t => ({ name: t.textContent, seed: parseInt(t.dataset.seed), el: t }));
+  seeds.sort((a, b) => a.seed - b.seed);
 
-  const champSlot = document.getElementById(`${conf}-champ`);
-  champSlot.textContent = `#${winners[0].seed} ${winners[0].name}`;
-  champSlot.dataset.conf = conf;
-  champSlot.dataset.seed = winners[0].seed;
-
-  champSlot.onclick = () => {
-    document.getElementById("superbowl-slot").textContent =
-      champSlot.textContent;
-  };
+  // Lower seed goes to first slot
+  teams[0].textContent = seeds[0].name;
+  teams[0].dataset.seed = seeds[0].seed;
+  teams[1].textContent = seeds[1].name;
+  teams[1].dataset.seed = seeds[1].seed;
 }
