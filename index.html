@@ -7,19 +7,77 @@
 </head>
 <body>
 
-  <h1>NFL Playoff Bracket</h1>
+<h1>NFL Playoff Bracket</h1>
 
-  <div id="bracket">
+<div id="bracket">
+
+  <div class="conference">
+    <h2>AFC</h2>
+
     <div class="round">
-      <h2>Wild Card</h2>
-      <button class="team">Team A</button>
-      <button class="team">Team B</button>
+      <h3>Wild Card</h3>
+      <button class="team" data-next="afc-div-1">#2 Bills</button>
+      <button class="team" data-next="afc-div-1">#7 Steelers</button>
+
+      <button class="team" data-next="afc-div-2">#3 Chiefs</button>
+      <button class="team" data-next="afc-div-2">#6 Dolphins</button>
+
+      <button class="team" data-next="afc-div-3">#4 Texans</button>
+      <button class="team" data-next="afc-div-3">#5 Browns</button>
+    </div>
+
+    <div class="round">
+      <h3>Divisional</h3>
+      <div id="afc-div-1" class="slot"></div>
+      <div id="afc-div-2" class="slot"></div>
+      <div id="afc-div-3" class="slot">#1 Ravens (BYE)</div>
+    </div>
+
+    <div class="round">
+      <h3>AFC Champion</h3>
+      <div id="afc-champ" class="slot"></div>
     </div>
   </div>
 
-  <button id="download">Download Bracket</button>
+  <div class="conference">
+    <h2>NFC</h2>
 
-  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-  <script src="script.js"></script>
+    <div class="round">
+      <h3>Wild Card</h3>
+      <button class="team" data-next="nfc-div-1">#2 Cowboys</button>
+      <button class="team" data-next="nfc-div-1">#7 Packers</button>
+
+      <button class="team" data-next="nfc-div-2">#3 Lions</button>
+      <button class="team" data-next="nfc-div-2">#6 Rams</button>
+
+      <button class="team" data-next="nfc-div-3">#4 Buccaneers</button>
+      <button class="team" data-next="nfc-div-3">#5 Eagles</button>
+    </div>
+
+    <div class="round">
+      <h3>Divisional</h3>
+      <div id="nfc-div-1" class="slot"></div>
+      <div id="nfc-div-2" class="slot"></div>
+      <div id="nfc-div-3" class="slot">#1 49ers (BYE)</div>
+    </div>
+
+    <div class="round">
+      <h3>NFC Champion</h3>
+      <div id="nfc-champ" class="slot"></div>
+    </div>
+  </div>
+
+  <div class="superbowl">
+    <h2>Super Bowl Champion</h2>
+    <div id="superbowl" class="slot"></div>
+  </div>
+
+</div>
+
+<button id="download">Download Bracket</button>
+
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="script.js"></script>
+
 </body>
 </html>
