@@ -172,3 +172,44 @@ body {
     transform: scale(0.6);
   }
 }
+/* =========================
+   PRINT STYLES
+========================= */
+@media print {
+  body {
+    background: #fff;
+    padding: 0;
+  }
+
+  /* Hide everything except the bracket */
+  body * {
+    visibility: hidden;
+  }
+
+  #bracket,
+  #bracket * {
+    visibility: visible;
+  }
+
+  #bracket {
+    position: absolute;
+    left: 0;
+    top: 0;
+    transform: scale(0.9);
+    transform-origin: top left;
+  }
+
+  /* Remove UI fluff */
+  .round-label {
+    font-size: 14px;
+  }
+
+  .team {
+    cursor: default;
+  }
+
+  button {
+    display: none;
+  }
+}
+
