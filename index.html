@@ -17,38 +17,40 @@
   <div class="round-label" style="grid-column:4;">Super Bowl</div>
 
   <!-- ===== Round 1: Wild Card ===== -->
-  <div class="matchup" style="grid-column:1; grid-row:1;">
-    <div class="team" data-team="AFC1">AFC 1</div>
-    <div class="team" data-team="AFC8">AFC 8</div>
+  <!-- AFC -->
+  <div class="matchup" style="grid-column:1; grid-row:1;" data-game="AFC1">
+    <div class="team" data-team="AFC1" data-seed="1">AFC 1</div>
+    <div class="team" data-team="AFC8" data-seed="8">AFC 8</div>
   </div>
-  <div class="matchup" style="grid-column:1; grid-row:2;">
-    <div class="team" data-team="AFC2">AFC 2</div>
-    <div class="team" data-team="AFC7">AFC 7</div>
+  <div class="matchup" style="grid-column:1; grid-row:2;" data-game="AFC2">
+    <div class="team" data-team="AFC2" data-seed="2">AFC 2</div>
+    <div class="team" data-team="AFC7" data-seed="7">AFC 7</div>
   </div>
-  <div class="matchup" style="grid-column:1; grid-row:3;">
-    <div class="team" data-team="AFC3">AFC 3</div>
-    <div class="team" data-team="AFC6">AFC 6</div>
+  <div class="matchup" style="grid-column:1; grid-row:3;" data-game="AFC3">
+    <div class="team" data-team="AFC3" data-seed="3">AFC 3</div>
+    <div class="team" data-team="AFC6" data-seed="6">AFC 6</div>
   </div>
-  <div class="matchup" style="grid-column:1; grid-row:4;">
-    <div class="team" data-team="AFC4">AFC 4</div>
-    <div class="team" data-team="AFC5">AFC 5</div>
+  <div class="matchup" style="grid-column:1; grid-row:4;" data-game="AFC4">
+    <div class="team" data-team="AFC4" data-seed="4">AFC 4</div>
+    <div class="team" data-team="AFC5" data-seed="5">AFC 5</div>
   </div>
 
-  <div class="matchup" style="grid-column:1; grid-row:5;">
-    <div class="team" data-team="NFC4">NFC 4</div>
-    <div class="team" data-team="NFC5">NFC 5</div>
+  <!-- NFC -->
+  <div class="matchup" style="grid-column:1; grid-row:5;" data-game="NFC4">
+    <div class="team" data-team="NFC4" data-seed="4">NFC 4</div>
+    <div class="team" data-team="NFC5" data-seed="5">NFC 5</div>
   </div>
-  <div class="matchup" style="grid-column:1; grid-row:6;">
-    <div class="team" data-team="NFC3">NFC 3</div>
-    <div class="team" data-team="NFC6">NFC 6</div>
+  <div class="matchup" style="grid-column:1; grid-row:6;" data-game="NFC3">
+    <div class="team" data-team="NFC3" data-seed="3">NFC 3</div>
+    <div class="team" data-team="NFC6" data-seed="6">NFC 6</div>
   </div>
-  <div class="matchup" style="grid-column:1; grid-row:7;">
-    <div class="team" data-team="NFC2">NFC 2</div>
-    <div class="team" data-team="NFC7">NFC 7</div>
+  <div class="matchup" style="grid-column:1; grid-row:7;" data-game="NFC2">
+    <div class="team" data-team="NFC2" data-seed="2">NFC 2</div>
+    <div class="team" data-team="NFC7" data-seed="7">NFC 7</div>
   </div>
-  <div class="matchup" style="grid-column:1; grid-row:8;">
-    <div class="team" data-team="NFC1">NFC 1</div>
-    <div class="team" data-team="NFC8">NFC 8</div>
+  <div class="matchup" style="grid-column:1; grid-row:8;" data-game="NFC1">
+    <div class="team" data-team="NFC1" data-seed="1">NFC 1</div>
+    <div class="team" data-team="NFC8" data-seed="8">NFC 8</div>
   </div>
 
   <!-- ===== Round 2: Divisional ===== -->
@@ -88,36 +90,39 @@
 </div>
 
 <script>
+// Function to automatically propagate winners to next round
 function propagateWinner(matchup, selectedTeam) {
   const gameId = matchup.dataset.game;
   let nextMatchup, slotIndex;
 
   // AFC logic
-  if (gameId?.startsWith('AFC')) {
-    if (gameId.includes('1') || gameId.includes('2')) nextMatchup = document.querySelector('[data-game="AFC-D1"]');
-    else if (gameId.includes('3') || gameId.includes('4')) nextMatchup = document.querySelector('[data-game="AFC-D2"]');
-    else if (gameId.includes('D1') || gameId.includes('D2')) nextMatchup = document.querySelector('[data-game="AFC-Conf"]');
-    slotIndex = (gameId.includes('1') || gameId.includes('3') || gameId.includes('D1')) ? 0 : 1;
+  if (gameId.startsWith('AFC')) {
+    if (['AFC1','AFC2'].includes(gameId)) nextMatchup = document.querySelector('[data-game="AFC-D1"]');
+    else if (['AFC3','AFC4'].includes(gameId)) nextMatchup = document.querySelector('[data-game="AFC-D2"]');
+    else if (['AFC-D1','AFC-D2'].includes(gameId)) nextMatchup = document.querySelector('[data-game="AFC-Conf"]');
+    slotIndex = (['AFC1','AFC3','AFC-D1'].includes(gameId)) ? 0 : 1;
   }
 
   // NFC logic
-  if (gameId?.startsWith('NFC')) {
-    if (gameId.includes('1') || gameId.includes('2')) nextMatchup = document.querySelector('[data-game="NFC-D1"]');
-    else if (gameId.includes('3') || gameId.includes('4')) nextMatchup = document.querySelector('[data-game="NFC-D2"]');
-    else if (gameId.includes('D1') || gameId.includes('D2')) nextMatchup = document.querySelector('[data-game="NFC-Conf"]');
-    slotIndex = (gameId.includes('1') || gameId.includes('3') || gameId.includes('D1')) ? 0 : 1;
+  if (gameId.startsWith('NFC')) {
+    if (['NFC1','NFC2'].includes(gameId)) nextMatchup = document.querySelector('[data-game="NFC-D1"]');
+    else if (['NFC3','NFC4','NFC5','NFC6'].includes(gameId)) nextMatchup = document.querySelector('[data-game="NFC-D2"]');
+    else if (['NFC-D1','NFC-D2'].includes(gameId)) nextMatchup = document.querySelector('[data-game="NFC-Conf"]');
+    slotIndex = (['NFC1','NFC3','NFC-D1'].includes(gameId)) ? 0 : 1;
   }
 
   // Conference -> Super Bowl
-  if (gameId?.includes('Conf')) nextMatchup = document.querySelector('[data-game="SB"]');
+  if (gameId.includes('Conf')) nextMatchup = document.querySelector('[data-game="SB"]');
 
   if (!nextMatchup) return;
 
   const slot = nextMatchup.children[slotIndex];
   slot.textContent = selectedTeam.textContent;
   slot.dataset.team = selectedTeam.dataset.team;
+  slot.dataset.seed = selectedTeam.dataset.seed;
 }
 
+// Add click events to all teams
 document.querySelectorAll('.team').forEach(team => {
   team.addEventListener('click', () => {
     const matchup = team.parentElement;
@@ -130,3 +135,4 @@ document.querySelectorAll('.team').forEach(team => {
 
 </body>
 </html>
+
