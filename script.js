@@ -196,7 +196,11 @@ function handleTeamClick(teamDiv) {
       seed: parseInt(teamDiv.dataset.seed),
       game: gameId
     };
-    state[conf].conference = [winner];
+    state[conf].conference = state[conf].conference.filter(
+      t => t.game !== 'conference'
+);
+    state[conf].conference.push({ ...winner, game: 'conference' });
+
     updateSuperBowl(); // ✅ only update SB when Conference winner is picked
     return;
   }
