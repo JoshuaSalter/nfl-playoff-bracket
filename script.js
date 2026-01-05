@@ -61,6 +61,8 @@ function updateDivisional(conf) {
     ? [document.querySelector('[data-game="AFC-D1"]'), document.querySelector('[data-game="AFC-D2"]')]
     : [document.querySelector('[data-game="NFC-D1"]'), document.querySelector('[data-game="NFC-D2"]')];
 
+  if (winners.length === 0) return;
+
   const first = firstSeed[conf];
   const lowest = winners[winners.length - 1];
   const remaining = winners.filter(t => t.name !== lowest.name);
@@ -93,7 +95,6 @@ function updateDivisional(conf) {
   // --- DIV 2: remaining two teams ---
   const div2 = divMatchups[1];
 
-  // Only update children that exist, append new as needed
   for (let i = 0; i < 2; i++) {
     const team = remaining[i];
     if (team) {
@@ -110,7 +111,6 @@ function updateDivisional(conf) {
     }
   }
 }
-
 
 // ===============================
 // UPDATE CONFERENCE SLOT
@@ -182,9 +182,10 @@ function handleTeamClick(teamDiv) {
     };
     state[conf].divisional = state[conf].divisional.filter(t => t.game !== gameId);
     state[conf].divisional.push(winner);
+
+    // ONLY update Conference matchup here
     updateConferenceSlot(conf, gameId, winner);
-    updateSuperBowl();
-    return;
+    return; // ✅ DO NOT update Super Bowl yet
   }
 
   // --- Conference ---
@@ -196,7 +197,7 @@ function handleTeamClick(teamDiv) {
       game: gameId
     };
     state[conf].conference = [winner];
-    updateSuperBowl();
+    updateSuperBowl(); // ✅ only update SB when Conference winner is picked
     return;
   }
 }
