@@ -61,16 +61,14 @@ function updateDivisional(conf) {
     ? [document.querySelector('[data-game="AFC-D1"]'), document.querySelector('[data-game="AFC-D2"]')]
     : [document.querySelector('[data-game="NFC-D1"]'), document.querySelector('[data-game="NFC-D2"]')];
 
-  if (winners.length === 0) return;
-
   const first = firstSeed[conf];
   const lowest = winners[winners.length - 1];
   const remaining = winners.filter(t => t.name !== lowest.name);
 
-  // === DIV 1: first seed vs lowest ===
+  // --- DIV 1: first seed vs lowest ---
   const div1 = divMatchups[0];
 
-  // Preserve first seed if already set
+  // FIRST SEED: preserve if already exists
   if (!div1.children[0] || !div1.children[0].dataset.team) {
     div1.insertBefore(
       createTeamElement(first.name, first.seed, first.logo),
@@ -78,15 +76,39 @@ function updateDivisional(conf) {
     );
   }
 
-  // Update lowest seed slot
-  if (div1.children[1]) div1.removeChild(div1.children[1]);
-  div1.appendChild(createTeamElement(lowest.name, lowest.seed, `logos/${lowest.name.toLowerCase()}.svg`));
+  // LOWEST SEED: update or insert
+  if (lowest) {
+    if (div1.children[1]) {
+      div1.replaceChild(
+        createTeamElement(lowest.name, lowest.seed, `logos/${lowest.name.toLowerCase()}.svg`),
+        div1.children[1]
+      );
+    } else {
+      div1.appendChild(
+        createTeamElement(lowest.name, lowest.seed, `logos/${lowest.name.toLowerCase()}.svg`)
+      );
+    }
+  }
 
-  // === DIV 2: remaining two teams ===
+  // --- DIV 2: remaining two teams ---
   const div2 = divMatchups[1];
-  div2.innerHTML = ''; // clear old teams
-  if (remaining[0]) div2.appendChild(createTeamElement(remaining[0].name, remaining[0].seed, `logos/${remaining[0].name.toLowerCase()}.svg`));
-  if (remaining[1]) div2.appendChild(createTeamElement(remaining[1].name, remaining[1].seed, `logos/${remaining[1].name.toLowerCase()}.svg`));
+
+  // Only update children that exist, append new as needed
+  for (let i = 0; i < 2; i++) {
+    const team = remaining[i];
+    if (team) {
+      if (div2.children[i]) {
+        div2.replaceChild(
+          createTeamElement(team.name, team.seed, `logos/${team.name.toLowerCase()}.svg`),
+          div2.children[i]
+        );
+      } else {
+        div2.appendChild(
+          createTeamElement(team.name, team.seed, `logos/${team.name.toLowerCase()}.svg`)
+        );
+      }
+    }
+  }
 }
 
 
