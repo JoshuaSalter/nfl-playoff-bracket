@@ -1,43 +1,36 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>NFL Playoff Bracket</title>
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-
-<h1>NFL Playoff Bracket</h1>
-
 <div id="bracket">
 
   <!-- AFC SIDE -->
   <div class="side afc">
     <h2>AFC</h2>
 
-    <div class="grid">
-      <!-- Wild Card Round -->
+    <!-- Wild Card Round -->
+    <div class="round wild-card">
       <div class="game" data-next="afc-div-1">
-        <button class="team" data-conf="afc">#2 Bills</button>
-        <button class="team" data-conf="afc">#7 Jaguars</button>
+        <button class="team" data-conf="afc" data-seed="2">#2 Bills</button>
+        <button class="team" data-conf="afc" data-seed="7">#7 Jaguars</button>
       </div>
 
       <div class="game" data-next="afc-div-2">
-        <button class="team" data-conf="afc">#3 Patriots</button>
-        <button class="team" data-conf="afc">#6 Chargers</button>
+        <button class="team" data-conf="afc" data-seed="3">#3 Patriots</button>
+        <button class="team" data-conf="afc" data-seed="6">#6 Chargers</button>
       </div>
 
       <div class="game" data-next="afc-div-3">
-        <button class="team" data-conf="afc">#4 Texans</button>
-        <button class="team" data-conf="afc">#5 Steelers</button>
+        <button class="team" data-conf="afc" data-seed="4">#4 Texans</button>
+        <button class="team" data-conf="afc" data-seed="5">#5 Steelers</button>
       </div>
+    </div>
 
-      <!-- Divisional Round Slots -->
+    <!-- Divisional Round -->
+    <div class="round divisional">
       <div id="afc-div-1" class="slot"></div>
       <div id="afc-div-2" class="slot"></div>
       <div id="afc-div-3" class="slot">#1 Ravens</div>
+    </div>
 
-      <!-- AFC Championship Slot -->
+    <!-- AFC Championship -->
+    <div class="round conference">
       <div id="afc-champ" class="slot champ"></div>
     </div>
   </div>
@@ -52,35 +45,35 @@
   <div class="side nfc">
     <h2>NFC</h2>
 
-    <div class="grid">
-      <!-- Wild Card Round -->
+    <!-- Wild Card Round -->
+    <div class="round wild-card">
       <div class="game" data-next="nfc-div-1">
-        <button class="team" data-conf="nfc">#2 Bears</button>
-        <button class="team" data-conf="nfc">#7 Packers</button>
+        <button class="team" data-conf="nfc" data-seed="2">#2 Bears</button>
+        <button class="team" data-conf="nfc" data-seed="7">#7 Packers</button>
       </div>
 
       <div class="game" data-next="nfc-div-2">
-        <button class="team" data-conf="nfc">#3 Lions</button>
-        <button class="team" data-conf="nfc">#6 Panthers</button>
+        <button class="team" data-conf="nfc" data-seed="3">#3 Lions</button>
+        <button class="team" data-conf="nfc" data-seed="6">#6 Panthers</button>
       </div>
 
       <div class="game" data-next="nfc-div-3">
-        <button class="team" data-conf="nfc">#4 Buccaneers</button>
-        <button class="team" data-conf="nfc">#5 Eagles</button>
+        <button class="team" data-conf="nfc" data-seed="4">#4 Buccaneers</button>
+        <button class="team" data-conf="nfc" data-seed="5">#5 Eagles</button>
       </div>
+    </div>
 
-      <!-- Divisional Round Slots -->
+    <!-- Divisional Round -->
+    <div class="round divisional">
       <div id="nfc-div-1" class="slot"></div>
       <div id="nfc-div-2" class="slot"></div>
       <div id="nfc-div-3" class="slot">#1 49ers</div>
+    </div>
 
-      <!-- NFC Championship Slot -->
+    <!-- NFC Championship -->
+    <div class="round conference">
       <div id="nfc-champ" class="slot champ"></div>
     </div>
   </div>
 
 </div>
-
-<script src="script.js"></script>
-</body>
-</html>
