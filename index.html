@@ -11,19 +11,27 @@
 
 <div id="bracket">
 
+  <!-- AFC -->
   <div class="conference">
     <h2>AFC</h2>
 
     <div class="round">
       <h3>Wild Card</h3>
-      <button class="team" data-next="afc-div-1">#2 Bills</button>
-      <button class="team" data-next="afc-div-1">#7 Steelers</button>
 
-      <button class="team" data-next="afc-div-2">#3 Chiefs</button>
-      <button class="team" data-next="afc-div-2">#6 Dolphins</button>
+      <div class="game" data-next="afc-div-1">
+        <button class="team">#2 Bills</button>
+        <button class="team">#7 Steelers</button>
+      </div>
 
-      <button class="team" data-next="afc-div-3">#4 Texans</button>
-      <button class="team" data-next="afc-div-3">#5 Browns</button>
+      <div class="game" data-next="afc-div-2">
+        <button class="team">#3 Chiefs</button>
+        <button class="team">#6 Dolphins</button>
+      </div>
+
+      <div class="game" data-next="afc-div-3">
+        <button class="team">#4 Texans</button>
+        <button class="team">#5 Browns</button>
+      </div>
     </div>
 
     <div class="round">
@@ -39,19 +47,27 @@
     </div>
   </div>
 
+  <!-- NFC -->
   <div class="conference">
     <h2>NFC</h2>
 
     <div class="round">
       <h3>Wild Card</h3>
-      <button class="team" data-next="nfc-div-1">#2 Cowboys</button>
-      <button class="team" data-next="nfc-div-1">#7 Packers</button>
 
-      <button class="team" data-next="nfc-div-2">#3 Lions</button>
-      <button class="team" data-next="nfc-div-2">#6 Rams</button>
+      <div class="game" data-next="nfc-div-1">
+        <button class="team">#2 Cowboys</button>
+        <button class="team">#7 Packers</button>
+      </div>
 
-      <button class="team" data-next="nfc-div-3">#4 Buccaneers</button>
-      <button class="team" data-next="nfc-div-3">#5 Eagles</button>
+      <div class="game" data-next="nfc-div-2">
+        <button class="team">#3 Lions</button>
+        <button class="team">#6 Rams</button>
+      </div>
+
+      <div class="game" data-next="nfc-div-3">
+        <button class="team">#4 Buccaneers</button>
+        <button class="team">#5 Eagles</button>
+      </div>
     </div>
 
     <div class="round">
@@ -67,8 +83,9 @@
     </div>
   </div>
 
-  <div class="superbowl">
-    <h2>Super Bowl Champion</h2>
+  <!-- Super Bowl -->
+  <div class="conference">
+    <h2>Super Bowl</h2>
     <div id="superbowl" class="slot"></div>
   </div>
 
