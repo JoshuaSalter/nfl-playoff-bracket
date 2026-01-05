@@ -75,18 +75,30 @@ function updateDivisional(conf) {
 // ===============================
 // UPDATE CONFERENCE
 // ===============================
-function updateConferenceSlot(conf, gameId, winner) {
-  const matchup = document.querySelector(
-    `[data-game="${conf.toUpperCase()}-Conf"]`
-  );
+function updateConferenceSlot(conf, divGameId, winner) {
+  const confMatchup = conf === 'afc'
+    ? document.querySelector('[data-game="AFC-Conf"]')
+    : document.querySelector('[data-game="NFC-Conf"]');
 
-  const index =
-    (conf === 'afc' && gameId === 'AFC-D1') ||
-    (conf === 'nfc' && gameId === 'NFC-D1')
+  const slotIndex =
+    (conf === 'afc' && divGameId === 'AFC-D1') ||
+    (conf === 'nfc' && divGameId === 'NFC-D1')
       ? 0
       : 1;
 
-  matchup.children[index].replaceWith(
+  // Get only existing team slots
+  let slots = Array.from(confMatchup.querySelectorAll('.team'));
+
+  // Ensure we have 2 slots
+  while (slots.length < 2) {
+    const emptySlot = document.createElement('div');
+    emptySlot.classList.add('team', 'empty');
+    confMatchup.appendChild(emptySlot);
+    slots.push(emptySlot);
+  }
+
+  // Replace correct slot
+  slots[slotIndex].replaceWith(
     createTeamElement(
       winner.name,
       winner.seed,
@@ -94,38 +106,55 @@ function updateConferenceSlot(conf, gameId, winner) {
     )
   );
 
-  state[conf].conference = [{ ...winner }];
+  // Update state
+  state[conf].conference = [{ ...winner, game: 'conference' }];
 }
 
 // ===============================
 // UPDATE SUPER BOWL (SAFE)
 // ===============================
 function updateSuperBowl() {
-  if (!state.afc.conference[0] || !state.nfc.conference[0]) return;
-
   const sb = document.querySelector('[data-game="SB"]');
   sb.innerHTML = '';
 
-  ['afc', 'nfc'].forEach(conf => {
-    const t = state[conf].conference[0];
+  const afcWinner = state.afc.conference[0];
+  const nfcWinner = state.nfc.conference[0];
+
+  if (afcWinner?.name) {
     sb.appendChild(
-      createTeamElement(t.name, t.seed, `logos/${t.name.toLowerCase()}.svg`)
+      createTeamElement(
+        afcWinner.name,
+        afcWinner.seed,
+        `logos/${afcWinner.name.toLowerCase()}.svg`
+      )
     );
-  });
+  }
+
+  if (nfcWinner?.name) {
+    sb.appendChild(
+      createTeamElement(
+        nfcWinner.name,
+        nfcWinner.seed,
+        `logos/${nfcWinner.name.toLowerCase()}.svg`
+      )
+    );
+  }
 }
+
 
 // ===============================
 // CLICK HANDLER
 // ===============================
 function handleTeamClick(teamDiv) {
   const matchup = teamDiv.closest('.matchup');
-  if (!matchup || !matchup.dataset.game) return;
+  const gameId = matchup?.dataset?.game;
 
-  const gameId = matchup.dataset.game;
+  // ✅ Safety guard (prevents desktop crashes)
+  if (!gameId) return;
 
+  // Highlight selected team
   matchup.querySelectorAll('.team').forEach(t => t.classList.remove('selected'));
   teamDiv.classList.add('selected');
-
   // --- Wild Card ---
   if (wildCardConfs[gameId]) {
     const conf = wildCardConfs[gameId];
