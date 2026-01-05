@@ -2,17 +2,17 @@
 // FULL STATE
 // ===============================
 const state = {
-  afc: { wildCard: [], conference: [] },
-  nfc: { wildCard: [], conference: [] }
+  afc: { wildCard: [], divisional: [], conference: [] },
+  nfc: { wildCard: [], divisional: [], conference: [] }
 };
 
-// First seeds
+// First seeds automatically in Divisional round
 const firstSeed = {
-  afc: { name: 'Broncos', seed: 1 },
-  nfc: { name: 'Seahawks', seed: 1 }
+  afc: { name: 'AFC1', seed: 1, logo: 'logos/afc1.svg' },
+  nfc: { name: 'NFC1', seed: 1, logo: 'logos/nfc1.svg' }
 };
 
-// Wild Card → Conference map
+// Map Wild Card games to conferences
 const wildCardConfs = {
   'AFC-WC1': 'afc',
   'AFC-WC2': 'afc',
@@ -22,7 +22,7 @@ const wildCardConfs = {
   'NFC-WC3': 'nfc'
 };
 
-// Divisional → Conference slot mapping
+// Map divisional game to conference slot index
 const divisionalToConfSlot = {
   'AFC-D1': 0,
   'AFC-D2': 1,
@@ -31,29 +31,30 @@ const divisionalToConfSlot = {
 };
 
 // ===============================
-// HELPERS
+// HELPER FUNCTIONS
 // ===============================
-const sortBySeed = (a, b) => a.seed - b.seed;
+function sortBySeed(a, b) { return a.seed - b.seed; }
 
-function createTeamElement(name, seed) {
-  const team = document.createElement('div');
-  team.classList.add('team');
-  team.dataset.team = name;
-  team.dataset.seed = seed;
+function createTeamElement(name, seed, logoPath) {
+  const teamDiv = document.createElement('div');
+  teamDiv.classList.add('team');
+  teamDiv.dataset.team = name;
+  teamDiv.dataset.seed = seed;
 
   const img = document.createElement('img');
-  img.src = `logos/${name.toLowerCase()}.svg`;
+  img.src = logoPath;
   img.alt = name;
+  img.classList.add('logo');
 
   const span = document.createElement('span');
   span.textContent = `#${seed} ${name}`;
 
-  team.append(img, span);
-  team.addEventListener('click', () => handleTeamClick(team));
-
-  return team;
+  teamDiv.append(img, span);
+  teamDiv.addEventListener('click', () => handleTeamClick(teamDiv));
+  return teamDiv;
 }
 
+// Fill a team slot with a team or mark empty
 function fillTeamSlot(slot, team) {
   slot.innerHTML = '';
   if (!team) {
@@ -61,38 +62,49 @@ function fillTeamSlot(slot, team) {
     return;
   }
   slot.classList.remove('empty');
-  slot.appendChild(createTeamElement(team.name, team.seed));
+  slot.appendChild(createTeamElement(team.name, team.seed, `logos/${team.name.toLowerCase()}.svg`));
 }
 
 // ===============================
-// UPDATE DIVISIONAL
+// UPDATE DIVISIONAL MATCHUPS
 // ===============================
 function updateDivisional(conf) {
   const winners = [...state[conf].wildCard].sort(sortBySeed);
   if (winners.length === 0) return;
 
-  const divMatchups = [
-    document.querySelector(`[data-game="${conf.toUpperCase()}-D1"]`),
-    document.querySelector(`[data-game="${conf.toUpperCase()}-D2"]`)
-  ];
+  const divMatchups = conf === 'afc'
+    ? [document.querySelector('[data-game="AFC-D1"]'), document.querySelector('[data-game="AFC-D2"]')]
+    : [document.querySelector('[data-game="NFC-D1"]'), document.querySelector('[data-game="NFC-D2"]')];
 
   const first = firstSeed[conf];
+  const lowest = winners[winners.length - 1];
+  const remaining = winners.filter(t => t.name !== lowest.name);
 
-  // DIV 1: first seed vs lowest wildcard
-  const lowest = winners[winners.length - 1]; 
-  const remaining = winners.filter(t => t !== lowest);
+  // --- DIV 1 ---
+  const div1 = divMatchups[0];
+  if (!div1.children[0] || !div1.children[0].dataset.team) {
+    div1.insertBefore(createTeamElement(first.name, first.seed, first.logo), div1.children[0] || null);
+  }
+  if (lowest) {
+    if (div1.children[1]) {
+      div1.replaceChild(createTeamElement(lowest.name, lowest.seed, `logos/${lowest.name.toLowerCase()}.svg`), div1.children[1]);
+    } else div1.appendChild(createTeamElement(lowest.name, lowest.seed, `logos/${lowest.name.toLowerCase()}.svg`));
+  }
 
-  divMatchups[0].innerHTML = '';
-  divMatchups[0].appendChild(createTeamElement(first.name, first.seed));
-  if (lowest) divMatchups[0].appendChild(createTeamElement(lowest.name, lowest.seed));
-
-  // DIV 2: remaining wildcard winners
-  divMatchups[1].innerHTML = '';
-  remaining.forEach(t => divMatchups[1].appendChild(createTeamElement(t.name, t.seed)));
+  // --- DIV 2 ---
+  const div2 = divMatchups[1];
+  for (let i = 0; i < 2; i++) {
+    const team = remaining[i];
+    if (team) {
+      if (div2.children[i]) {
+        div2.replaceChild(createTeamElement(team.name, team.seed, `logos/${team.name.toLowerCase()}.svg`), div2.children[i]);
+      } else div2.appendChild(createTeamElement(team.name, team.seed, `logos/${team.name.toLowerCase()}.svg`));
+    }
+  }
 }
 
 // ===============================
-// UPDATE CONFERENCE
+// UPDATE CONFERENCE SLOT
 // ===============================
 function updateConferenceSlot(conf, divGameId, winner) {
   const confMatchup = conf === 'afc'
@@ -101,20 +113,17 @@ function updateConferenceSlot(conf, divGameId, winner) {
 
   const slotIndex = divisionalToConfSlot[divGameId];
 
-  // Ensure 2 slots exist
-  const slots = Array.from(confMatchup.querySelectorAll('.team'));
-  while (slots.length < 2) {
-    const emptySlot = document.createElement('div');
-    emptySlot.classList.add('team', 'empty');
-    confMatchup.appendChild(emptySlot);
-    slots.push(emptySlot);
-  }
+  // Ensure state array has two slots
+  if (!state[conf].conference[0]) state[conf].conference[0] = null;
+  if (!state[conf].conference[1]) state[conf].conference[1] = null;
 
-  const updatedSlots = confMatchup.querySelectorAll('.team');
-  updatedSlots[slotIndex].replaceWith(createTeamElement(winner.name, winner.seed));
-
-  // Update state
+  // Update state and DOM slot
   state[conf].conference[slotIndex] = { ...winner, game: 'conference' };
+
+  const slot = confMatchup.children[slotIndex] || document.createElement('div');
+  slot.classList.add('team');
+  confMatchup.appendChild(slot);
+  fillTeamSlot(slot, winner);
 }
 
 // ===============================
@@ -122,14 +131,17 @@ function updateConferenceSlot(conf, divGameId, winner) {
 // ===============================
 function updateSuperBowl() {
   const sb = document.querySelector('[data-game="SB"]');
-  const slots = sb.querySelectorAll('.team');
+  sb.innerHTML = '';
 
-  fillTeamSlot(slots[0], state.afc.conference[0]);
-  fillTeamSlot(slots[1], state.nfc.conference[0]);
+  const afcWinner = state.afc.conference[state.afc.conference.length - 1];
+  const nfcWinner = state.nfc.conference[state.nfc.conference.length - 1];
+
+  if (afcWinner) sb.appendChild(createTeamElement(afcWinner.name, afcWinner.seed, `logos/${afcWinner.name.toLowerCase()}.svg`));
+  if (nfcWinner) sb.appendChild(createTeamElement(nfcWinner.name, nfcWinner.seed, `logos/${nfcWinner.name.toLowerCase()}.svg`));
 }
 
 // ===============================
-// CLICK HANDLER
+// HANDLE TEAM CLICK
 // ===============================
 function handleTeamClick(teamDiv) {
   const matchup = teamDiv.closest('.matchup');
@@ -143,56 +155,51 @@ function handleTeamClick(teamDiv) {
   // --- Wild Card ---
   if (wildCardConfs[gameId]) {
     const conf = wildCardConfs[gameId];
+    const winner = { name: teamDiv.dataset.team, seed: +teamDiv.dataset.seed, game: gameId };
     state[conf].wildCard = state[conf].wildCard.filter(t => t.game !== gameId);
-    state[conf].wildCard.push({
-      name: teamDiv.dataset.team,
-      seed: +teamDiv.dataset.seed,
-      game: gameId
-    });
+    state[conf].wildCard.push(winner);
     updateDivisional(conf);
     return;
   }
 
   // --- Divisional ---
-  if (gameId.includes('-D')) {
+  if (gameId.includes('D')) {
     const conf = gameId.startsWith('AFC') ? 'afc' : 'nfc';
-    updateConferenceSlot(conf, gameId, {
-      name: teamDiv.dataset.team,
-      seed: +teamDiv.dataset.seed
-    });
+    const winner = { name: teamDiv.dataset.team, seed: +teamDiv.dataset.seed, game: gameId };
+    state[conf].divisional = state[conf].divisional.filter(t => t.game !== gameId);
+    state[conf].divisional.push(winner);
+    updateConferenceSlot(conf, gameId, winner);
     return;
   }
 
   // --- Conference ---
   if (gameId.includes('Conf')) {
     const conf = gameId.startsWith('AFC') ? 'afc' : 'nfc';
-    state[conf].conference = [{
-      name: teamDiv.dataset.team,
-      seed: +teamDiv.dataset.seed
-    }];
+    const winner = { name: teamDiv.dataset.team, seed: +teamDiv.dataset.seed, game: gameId };
+    state[conf].conference = state[conf].conference.filter(t => t.game !== 'conference');
+    state[conf].conference.push(winner);
     updateSuperBowl();
   }
 }
 
 // ===============================
-// INIT
+// INITIALIZE TEAMS
 // ===============================
-document.querySelectorAll('.team').forEach(team =>
-  team.addEventListener('click', () => handleTeamClick(team))
-);
+document.querySelectorAll('.team').forEach(team => {
+  team.addEventListener('click', () => handleTeamClick(team));
+});
 
 // ===============================
-// SHARE BUTTON
+// SHARE BUTTON (IMAGE ONLY)
 // ===============================
 document.getElementById('share-btn').addEventListener('click', async () => {
   const bracketEl = document.getElementById('bracket');
 
   // Use html2canvas to render bracket as image
-  html2canvas(bracketEl, { backgroundColor: '#ffffff' }).then(async canvas => {
+  html2canvas(bracketEl, { backgroundColor: '#fff' }).then(canvas => {
     canvas.toBlob(async blob => {
       const file = new File([blob], 'NFL-Bracket-2026.png', { type: 'image/png' });
 
-      // Web Share API if supported
       if (navigator.canShare && navigator.canShare({ files: [file] })) {
         try {
           await navigator.share({
@@ -204,7 +211,7 @@ document.getElementById('share-btn').addEventListener('click', async () => {
           console.error('Error sharing:', err);
         }
       } else {
-        // Fallback: save to files
+        // Fallback: download image
         const link = document.createElement('a');
         link.href = URL.createObjectURL(file);
         link.download = 'NFL-Bracket-2026.png';
