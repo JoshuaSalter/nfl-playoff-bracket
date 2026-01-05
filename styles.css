@@ -1,70 +1,65 @@
-#bracket {
-  display: grid;
-  grid-template-columns: 220px 220px 220px 220px 220px;
-  gap: 20px;
-  align-items: start;
-  justify-items: center;
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
 }
 
-/* Each side (AFC / NFC) */
+#bracket {
+  display: grid;
+  grid-template-columns: 1fr 200px 1fr;
+  gap: 40px;
+  align-items: center;
+  padding: 40px;
+}
+
+/* AFC & NFC containers */
 .side {
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  align-items: center;
 }
 
-/* Rounds stacked vertically */
-.round {
-  display: flex;
-  flex-direction: column;
-  gap: 40px;
+/* Grid for rounds */
+.grid {
+  display: grid;
+  grid-template-columns: 220px 220px 220px;
+  grid-template-rows: repeat(3, 80px);
+  gap: 30px 40px;
 }
 
-/* Wild Card and Divisional matchups */
+/* Games */
 .game {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
   border: 1px solid #333;
   padding: 6px;
-  border-radius: 4px;
-  background: #f9f9f9;
-  width: 180px;
 }
 
 .team {
-  cursor: pointer;
+  display: block;
+  width: 100%;
+  margin: 4px 0;
   padding: 6px;
-  border-radius: 4px;
-  text-align: center;
+  cursor: pointer;
 }
 
 .team.winner {
-  background-color: #cce5ff;
+  background: #cce5ff;
   font-weight: bold;
 }
 
-/* Slots for Divisional / Conference / Super Bowl */
+/* Slots */
 .slot {
   border: 2px dashed #777;
-  min-height: 32px;
-  padding: 4px;
-  cursor: pointer;
-  text-align: center;
-  border-radius: 4px;
-  width: 180px;
+  height: 32px;
+  line-height: 32px;
 }
 
 .champ {
   font-weight: bold;
   background: #f5f5f5;
-  border: 2px solid #333;
 }
 
-/* Super Bowl column */
+/* Super Bowl */
 .superbowl {
   display: flex;
   flex-direction: column;
-  gap: 80px;
   align-items: center;
 }
