@@ -4,37 +4,22 @@ document.querySelectorAll(".game").forEach(game => {
 
   teams.forEach(team => {
     team.addEventListener("click", () => {
-      // Clear previous winner
       teams.forEach(t => t.classList.remove("winner"));
-
-      // Mark winner
       team.classList.add("winner");
 
-      // Advance winner
-      const nextSlot = document.getElementById(nextId);
-      if (nextSlot) {
-        nextSlot.textContent = team.textContent;
-      }
+      const next = document.getElementById(nextId);
+      if (!next) return;
 
-      // Advance to conference champ
+      next.textContent = team.textContent;
+
       if (nextId.includes("div")) {
         const champId = nextId.startsWith("afc") ? "afc-champ" : "nfc-champ";
-        nextSlot.dataset.next = champId;
+        next.dataset.next = champId;
       }
 
-      // Advance to Super Bowl
       if (nextId.includes("champ")) {
-        document.getElementById("superbowl").textContent = team.textContent;
+        document.getElementById("superbowl-slot").textContent = team.textContent;
       }
     });
-  });
-});
-
-document.getElementById("download").addEventListener("click", () => {
-  html2canvas(document.getElementById("bracket")).then(canvas => {
-    const link = document.createElement("a");
-    link.download = "nfl-playoff-bracket.png";
-    link.href = canvas.toDataURL();
-    link.click();
   });
 });
