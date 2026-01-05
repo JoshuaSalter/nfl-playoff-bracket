@@ -1,86 +1,157 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>NFL Playoff Bracket</title>
-  <link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026 NFL Playoff Bracket</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f5f5f5;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  #bracket {
+    display: grid;
+    grid-template-columns: repeat(4, 220px);
+    gap: 40px;
+    align-items: start;
+  }
+
+  .round {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .matchup {
+    display: flex;
+    flex-direction: column;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    padding: 5px;
+    margin-bottom: 20px;
+    background: #fff;
+  }
+
+  .team {
+    padding: 8px;
+    margin: 2px 0;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.2s;
+  }
+
+  .team:hover {
+    background-color: #e0f0ff;
+  }
+
+  .team.selected {
+    background-color: #00bfff;
+    color: white;
+    font-weight: bold;
+  }
+
+  .team img {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+  }
+
+  h2 {
+    text-align: center;
+  }
+</style>
 </head>
 <body>
 
-<h1>NFL Playoff Bracket</h1>
-
 <div id="bracket">
+  <!-- Round 1 - Wild Card -->
+  <div class="round round-1">
+    <h2>Wild Card</h2>
 
-  <!-- AFC SIDE -->
-  <div class="side afc">
-    <h2>AFC</h2>
-
-    <div class="grid">
-      <!-- Wild Card -->
-      <div class="game" data-next="afc-div-1">
-        <button class="team">#2 Bills</button>
-        <button class="team">#7 Steelers</button>
-      </div>
-
-      <div class="game" data-next="afc-div-2">
-        <button class="team">#3 Chiefs</button>
-        <button class="team">#6 Dolphins</button>
-      </div>
-
-      <div class="game" data-next="afc-div-3">
-        <button class="team">#4 Texans</button>
-        <button class="team">#5 Browns</button>
-      </div>
-
-      <!-- Divisional -->
-      <div id="afc-div-1" class="slot"></div>
-      <div id="afc-div-2" class="slot"></div>
-      <div id="afc-div-3" class="slot">#1 Ravens</div>
-
-      <!-- AFC Champ -->
-      <div id="afc-champ" class="slot champ"></div>
+    <div class="matchup" data-game="1">
+      <div class="team" data-team="AFC1"><img src="" alt="">AFC 1</div>
+      <div class="team" data-team="AFC8"><img src="" alt="">AFC 8</div>
+    </div>
+    <div class="matchup" data-game="2">
+      <div class="team" data-team="AFC2"><img src="" alt="">AFC 2</div>
+      <div class="team" data-team="AFC7"><img src="" alt="">AFC 7</div>
+    </div>
+    <div class="matchup" data-game="3">
+      <div class="team" data-team="AFC3"><img src="" alt="">AFC 3</div>
+      <div class="team" data-team="AFC6"><img src="" alt="">AFC 6</div>
+    </div>
+    <div class="matchup" data-game="4">
+      <div class="team" data-team="AFC4"><img src="" alt="">AFC 4</div>
+      <div class="team" data-team="AFC5"><img src="" alt="">AFC 5</div>
     </div>
   </div>
 
-  <!-- SUPER BOWL -->
-  <div class="superbowl">
+  <!-- Round 2 - Divisional -->
+  <div class="round round-2">
+    <h2>Divisional</h2>
+    <div class="matchup" data-game="1">
+      <div class="team" data-team=""></div>
+      <div class="team" data-team=""></div>
+    </div>
+    <div class="matchup" data-game="2">
+      <div class="team" data-team=""></div>
+      <div class="team" data-team=""></div>
+    </div>
+  </div>
+
+  <!-- Round 3 - Conference Championships -->
+  <div class="round round-3">
+    <h2>Conference</h2>
+    <div class="matchup" data-game="1">
+      <div class="team" data-team=""></div>
+      <div class="team" data-team=""></div>
+    </div>
+  </div>
+
+  <!-- Round 4 - Super Bowl -->
+  <div class="round round-4">
     <h2>Super Bowl</h2>
-    <div id="superbowl-slot" class="slot champ"></div>
-  </div>
-
-  <!-- NFC SIDE -->
-  <div class="side nfc">
-    <h2>NFC</h2>
-
-    <div class="grid">
-      <!-- Wild Card -->
-      <div class="game" data-next="nfc-div-1">
-        <button class="team">#2 Cowboys</button>
-        <button class="team">#7 Packers</button>
-      </div>
-
-      <div class="game" data-next="nfc-div-2">
-        <button class="team">#3 Lions</button>
-        <button class="team">#6 Rams</button>
-      </div>
-
-      <div class="game" data-next="nfc-div-3">
-        <button class="team">#4 Buccaneers</button>
-        <button class="team">#5 Eagles</button>
-      </div>
-
-      <!-- Divisional -->
-      <div id="nfc-div-1" class="slot"></div>
-      <div id="nfc-div-2" class="slot"></div>
-      <div id="nfc-div-3" class="slot">#1 49ers</div>
-
-      <!-- NFC Champ -->
-      <div id="nfc-champ" class="slot champ"></div>
+    <div class="matchup" data-game="1">
+      <div class="team" data-team=""></div>
+      <div class="team" data-team=""></div>
     </div>
   </div>
-
 </div>
 
-<script src="script.js"></script>
+<script>
+function propagateWinner(matchup, selectedTeam) {
+  const gameNumber = parseInt(matchup.dataset.game);
+  const nextRound = matchup.parentElement.nextElementSibling;
+  if (!nextRound) return;
+
+  // Find the correct slot in next round
+  const nextGameIndex = Math.ceil(gameNumber / 2);
+  const nextMatchup = nextRound.querySelector(`.matchup[data-game="${nextGameIndex}"]`);
+  if (!nextMatchup) return;
+
+  const slotIndex = (gameNumber % 2 === 1) ? 0 : 1;
+  const slot = nextMatchup.children[slotIndex];
+  slot.textContent = selectedTeam.textContent;
+  slot.dataset.team = selectedTeam.dataset.team;
+}
+
+document.querySelectorAll('.team').forEach(team => {
+  team.addEventListener('click', () => {
+    const matchup = team.parentElement;
+    matchup.querySelectorAll('.team').forEach(t => t.classList.remove('selected'));
+    team.classList.add('selected');
+    propagateWinner(matchup, team);
+  });
+});
+</script>
+
 </body>
 </html>
+
