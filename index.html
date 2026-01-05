@@ -10,76 +10,103 @@
 
 <div id="bracket">
 
-  <!-- Round headings -->
-  <div class="round-label" style="grid-column:1; grid-row:1;">Wild Card</div>
-  <div class="round-label" style="grid-column:2; grid-row:1;">Divisional</div>
-  <div class="round-label" style="grid-column:3; grid-row:1;">Conference</div>
-  <div class="round-label" style="grid-column:4; grid-row:1;">Super Bowl</div>
+  <!-- ===== Wild Card ===== -->
+  <div class="round">
+    <div class="round-label">Wild Card</div>
+    <div class="round-stack">
 
-  <!-- ===== Round 1: Wild Card ===== -->
-  <!-- AFC Wild Card -->
-  <div class="matchup" style="grid-column:1; grid-row:2;" data-game="AFC-WC1">
-    <div class="team" data-team="AFC2" data-seed="2">AFC 2</div>
-    <div class="team" data-team="AFC7" data-seed="7">AFC 7</div>
-  </div>
-  <div class="matchup" style="grid-column:1; grid-row:5;" data-game="AFC-WC2">
-    <div class="team" data-team="AFC3" data-seed="3">AFC 3</div>
-    <div class="team" data-team="AFC6" data-seed="6">AFC 6</div>
-  </div>
-  <div class="matchup" style="grid-column:1; grid-row:8;" data-game="AFC-WC3">
-    <div class="team" data-team="AFC4" data-seed="4">AFC 4</div>
-    <div class="team" data-team="AFC5" data-seed="5">AFC 5</div>
-  </div>
+      <!-- AFC -->
+      <div class="matchup" data-game="AFC-WC1">
+        <div class="team" data-team="AFC2" data-seed="2">AFC 2</div>
+        <div class="team" data-team="AFC7" data-seed="7">AFC 7</div>
+      </div>
 
-  <!-- NFC Wild Card -->
-  <div class="matchup" style="grid-column:1; grid-row:12;" data-game="NFC-WC1">
-    <div class="team" data-team="NFC2" data-seed="2">NFC 2</div>
-    <div class="team" data-team="NFC7" data-seed="7">NFC 7</div>
-  </div>
-  <div class="matchup" style="grid-column:1; grid-row:15;" data-game="NFC-WC2">
-    <div class="team" data-team="NFC3" data-seed="3">NFC 3</div>
-    <div class="team" data-team="NFC6" data-seed="6">NFC 6</div>
-  </div>
-  <div class="matchup" style="grid-column:1; grid-row:18;" data-game="NFC-WC3">
-    <div class="team" data-team="NFC4" data-seed="4">NFC 4</div>
-    <div class="team" data-team="NFC5" data-seed="5">NFC 5</div>
-  </div>
+      <div class="matchup" data-game="AFC-WC2">
+        <div class="team" data-team="AFC3" data-seed="3">AFC 3</div>
+        <div class="team" data-team="AFC6" data-seed="6">AFC 6</div>
+      </div>
 
-  <!-- ===== Round 2: Divisional ===== -->
-  <!-- AFC Divisional (1st seed auto-advance) -->
-  <div class="matchup" style="grid-column:2; grid-row:3 / span 3;" data-game="AFC-D1">
-    <div class="team" data-team="AFC1" data-seed="1">AFC 1</div>
-    <div class="team"></div>
-  </div>
-  <div class="matchup" style="grid-column:2; grid-row:6 / span 3;" data-game="AFC-D2">
-    <div class="team"></div>
-    <div class="team"></div>
+      <div class="matchup" data-game="AFC-WC3">
+        <div class="team" data-team="AFC4" data-seed="4">AFC 4</div>
+        <div class="team" data-team="AFC5" data-seed="5">AFC 5</div>
+      </div>
+
+      <!-- NFC -->
+      <div class="matchup" data-game="NFC-WC1">
+        <div class="team" data-team="NFC2" data-seed="2">NFC 2</div>
+        <div class="team" data-team="NFC7" data-seed="7">NFC 7</div>
+      </div>
+
+      <div class="matchup" data-game="NFC-WC2">
+        <div class="team" data-team="NFC3" data-seed="3">NFC 3</div>
+        <div class="team" data-team="NFC6" data-seed="6">NFC 6</div>
+      </div>
+
+      <div class="matchup" data-game="NFC-WC3">
+        <div class="team" data-team="NFC4" data-seed="4">NFC 4</div>
+        <div class="team" data-team="NFC5" data-seed="5">NFC 5</div>
+      </div>
+
+    </div>
   </div>
 
-  <!-- NFC Divisional (1st seed auto-advance) -->
-  <div class="matchup" style="grid-column:2; grid-row:13 / span 3;" data-game="NFC-D1">
-    <div class="team" data-team="NFC1" data-seed="1">NFC 1</div>
-    <div class="team"></div>
-  </div>
-  <div class="matchup" style="grid-column:2; grid-row:16 / span 3;" data-game="NFC-D2">
-    <div class="team"></div>
-    <div class="team"></div>
+  <!-- ===== Divisional ===== -->
+  <div class="round">
+    <div class="round-label">Divisional</div>
+    <div class="round-stack">
+
+      <div class="matchup" data-game="AFC-D1">
+        <div class="team" data-team="AFC1" data-seed="1">AFC 1</div>
+        <div class="team"></div>
+      </div>
+
+      <div class="matchup" data-game="AFC-D2">
+        <div class="team"></div>
+        <div class="team"></div>
+      </div>
+
+      <div class="matchup" data-game="NFC-D1">
+        <div class="team" data-team="NFC1" data-seed="1">NFC 1</div>
+        <div class="team"></div>
+      </div>
+
+      <div class="matchup" data-game="NFC-D2">
+        <div class="team"></div>
+        <div class="team"></div>
+      </div>
+
+    </div>
   </div>
 
-  <!-- ===== Round 3: Conference ===== -->
-  <div class="matchup" style="grid-column:3; grid-row:4 / span 6;" data-game="AFC-Conf">
-    <div class="team"></div>
-    <div class="team"></div>
-  </div>
-  <div class="matchup" style="grid-column:3; grid-row:14 / span 6;" data-game="NFC-Conf">
-    <div class="team"></div>
-    <div class="team"></div>
+  <!-- ===== Conference ===== -->
+  <div class="round">
+    <div class="round-label">Conference</div>
+    <div class="round-stack">
+
+      <div class="matchup" data-game="AFC-Conf">
+        <div class="team"></div>
+        <div class="team"></div>
+      </div>
+
+      <div class="matchup" data-game="NFC-Conf">
+        <div class="team"></div>
+        <div class="team"></div>
+      </div>
+
+    </div>
   </div>
 
-  <!-- ===== Round 4: Super Bowl ===== -->
-  <div class="matchup" style="grid-column:4; grid-row:7 / span 10;" data-game="SB">
-    <div class="team"></div>
-    <div class="team"></div>
+  <!-- ===== Super Bowl ===== -->
+  <div class="round">
+    <div class="round-label">Super Bowl</div>
+    <div class="round-stack">
+
+      <div class="matchup" data-game="SB">
+        <div class="team"></div>
+        <div class="team"></div>
+      </div>
+
+    </div>
   </div>
 
 </div>
