@@ -1,11 +1,17 @@
-// Track winners for reseeding
+// State tracking for all rounds
 const state = {
-  afc: { wildCard: [], divisional: [] },
-  nfc: { wildCard: [], divisional: [] }
+  afc: { wildCard: [], divisional: [], conference: [] },
+  nfc: { wildCard: [], divisional: [], conference: [] }
 };
 
-// Map wildcard games to conference
-const confMap = {
+// First seeds automatically in Divisional round
+const firstSeed = {
+  afc: { name: 'AFC1', seed: 1 },
+  nfc: { name: 'NFC1', seed: 1 }
+};
+
+// Wild Card → Divisional mapping
+const wildCardConfs = {
   'AFC-WC1': 'afc',
   'AFC-WC2': 'afc',
   'AFC-WC3': 'afc',
@@ -14,20 +20,17 @@ const confMap = {
   'NFC-WC3': 'nfc'
 };
 
-// 1st seeds for each conference (automatically in Divisional round)
-const firstSeed = {
-  afc: { name: 'AFC1', seed: 1 },
-  nfc: { name: 'NFC1', seed: 1 }
-};
+// Helper to sort by seed
+function sortBySeed(a, b) { return a.seed - b.seed; }
 
-// Update Divisional round with reseeding
+// Update Divisional matchups dynamically
 function updateDivisional(conf) {
-  const winners = [...state[conf].wildCard].sort((a, b) => a.seed - b.seed);
+  const winners = [...state[conf].wildCard].sort(sortBySeed);
   const divMatchups = conf === 'afc'
     ? [document.querySelector('[data-game="AFC-D1"]'), document.querySelector('[data-game="AFC-D2"]')]
     : [document.querySelector('[data-game="NFC-D1"]'), document.querySelector('[data-game="NFC-D2"]')];
 
-  // Clear slots first
+  // Clear non-first-seed slots
   divMatchups.forEach(m => {
     Array.from(m.children).forEach(c => {
       if (!c.dataset.firstSeed) {
@@ -41,62 +44,70 @@ function updateDivisional(conf) {
   if (winners.length === 0) return;
 
   const first = firstSeed[conf];
-  const lowest = winners[winners.length - 1]; // highest seed number = lowest rank
+  const lowest = winners[winners.length - 1];
+  const remaining = winners.filter(t => t.name !== lowest.name);
 
-  // First seed always plays lowest-seeded winner
+  // First seed vs lowest
   divMatchups[0].children[0].textContent = first.name;
   divMatchups[0].children[0].dataset.team = first.name;
   divMatchups[0].children[0].dataset.seed = first.seed;
-  divMatchups[0].children[0].dataset.firstSeed = true; // mark as first seed
+  divMatchups[0].children[0].dataset.firstSeed = true;
 
   divMatchups[0].children[1].textContent = lowest.name;
   divMatchups[0].children[1].dataset.team = lowest.name;
   divMatchups[0].children[1].dataset.seed = lowest.seed;
 
-  // Remaining two teams (if any) go to second Divisional matchup
-  const remaining = winners.filter(t => t.name !== lowest.name);
-  if (remaining.length > 0) {
+  // Remaining two teams
+  if (remaining[0]) {
     divMatchups[1].children[0].textContent = remaining[0].name;
     divMatchups[1].children[0].dataset.team = remaining[0].name;
     divMatchups[1].children[0].dataset.seed = remaining[0].seed;
   }
-  if (remaining.length > 1) {
+  if (remaining[1]) {
     divMatchups[1].children[1].textContent = remaining[1].name;
     divMatchups[1].children[1].dataset.team = remaining[1].name;
     divMatchups[1].children[1].dataset.seed = remaining[1].seed;
   }
 }
 
-// Propagate winner to next round (Divisional → Conference → Super Bowl)
-function propagateNextRound(matchup) {
-  const gameId = matchup.dataset.game;
-  let nextMatchup, slotIndex;
+// Update Conference matchups dynamically based on Divisional winners
+function updateConference(conf) {
+  const winners = [...state[conf].divisional].sort(sortBySeed);
+  const confMatchup = conf === 'afc'
+    ? document.querySelector('[data-game="AFC-Conf"]')
+    : document.querySelector('[data-game="NFC-Conf"]');
 
-  if (gameId.startsWith('AFC')) {
-    if (gameId.includes('D1') || gameId.includes('D2')) nextMatchup = document.querySelector('[data-game="AFC-Conf"]');
+  // Clear slots
+  Array.from(confMatchup.children).forEach(c => {
+    c.textContent = '';
+    c.dataset.team = '';
+    c.dataset.seed = '';
+  });
+
+  if (winners.length >= 2) {
+    confMatchup.children[0].textContent = winners[0].name;
+    confMatchup.children[0].dataset.team = winners[0].name;
+    confMatchup.children[0].dataset.seed = winners[0].seed;
+
+    confMatchup.children[1].textContent = winners[1].name;
+    confMatchup.children[1].dataset.team = winners[1].name;
+    confMatchup.children[1].dataset.seed = winners[1].seed;
   }
-  if (gameId.startsWith('NFC')) {
-    if (gameId.includes('D1') || gameId.includes('D2')) nextMatchup = document.querySelector('[data-game="NFC-Conf"]');
-  }
-  if (gameId.includes('Conf')) nextMatchup = document.querySelector('[data-game="SB"]');
-
-  if (!nextMatchup) return;
-
-  const selectedTeam = matchup.querySelector('.team.selected');
-  if (!selectedTeam) return;
-
-  // Determine which slot to fill
-  if (!nextMatchup.children[0].textContent) slotIndex = 0;
-  else if (!nextMatchup.children[1].textContent) slotIndex = 1;
-  else return;
-
-  const slot = nextMatchup.children[slotIndex];
-  slot.textContent = selectedTeam.textContent;
-  slot.dataset.team = selectedTeam.dataset.team;
-  slot.dataset.seed = selectedTeam.dataset.seed;
 }
 
-// Add click events to all teams
+// Update Super Bowl based on Conference winners
+function updateSuperBowl() {
+  const sb = document.querySelector('[data-game="SB"]');
+  const afcWinner = state.afc.conference[0];
+  const nfcWinner = state.nfc.conference[0];
+
+  sb.children[0].textContent = afcWinner ? afcWinner.name : '';
+  sb.children[0].dataset.team = afcWinner ? afcWinner.name : '';
+  sb.children[1].textContent = nfcWinner ? nfcWinner.name : '';
+  sb.children[1].dataset.team = nfcWinner ? nfcWinner.name : '';
+}
+
+// Handle click on any team
 document.querySelectorAll('.team').forEach(team => {
   team.addEventListener('click', () => {
     const matchup = team.parentElement;
@@ -105,20 +116,42 @@ document.querySelectorAll('.team').forEach(team => {
     matchup.querySelectorAll('.team').forEach(t => t.classList.remove('selected'));
     team.classList.add('selected');
 
-    // Record winner for reseeding if Wild Card
-    const conf = confMap[matchup.dataset.game];
-    if (conf) {
-      const seed = parseInt(team.dataset.seed);
-      const name = team.textContent;
+    const gameId = matchup.dataset.game;
 
-      // Remove previous selection from same matchup
-      state[conf].wildCard = state[conf].wildCard.filter(t => t.game !== matchup.dataset.game);
-      state[conf].wildCard.push({ name, seed, game: matchup.dataset.game });
+    // Wild Card click
+    if (wildCardConfs[gameId]) {
+      const conf = wildCardConfs[gameId];
+      const winner = { name: team.textContent, seed: parseInt(team.dataset.seed), game: gameId };
 
-      updateDivisional(conf); // reseed Divisional live
+      // Remove old winner for this matchup
+      state[conf].wildCard = state[conf].wildCard.filter(t => t.game !== gameId);
+      state[conf].wildCard.push(winner);
+
+      updateDivisional(conf);
+      return; // Do not propagate yet
     }
 
-    // Propagate winner to next round
-    propagateNextRound(matchup);
+    // Divisional click
+    if (gameId.includes('D')) {
+      const conf = gameId.startsWith('AFC') ? 'afc' : 'nfc';
+      const winner = { name: team.textContent, seed: parseInt(team.dataset.seed), game: gameId };
+
+      state[conf].divisional = state[conf].divisional.filter(t => t.game !== gameId);
+      state[conf].divisional.push(winner);
+
+      updateConference(conf);
+      updateSuperBowl();
+      return;
+    }
+
+    // Conference click
+    if (gameId.includes('Conf')) {
+      const conf = gameId.startsWith('AFC') ? 'afc' : 'nfc';
+      const winner = { name: team.textContent, seed: parseInt(team.dataset.seed), game: gameId };
+
+      state[conf].conference = [winner]; // only one winner
+      updateSuperBowl();
+      return;
+    }
   });
 });
