@@ -22,6 +22,14 @@ const wildCardConfs = {
   'NFC-WC3': 'nfc'
 };
 
+// Divisional → Conference slot mapping
+const divisionalToConfSlot = {
+  'AFC-D1': 0,
+  'AFC-D2': 1,
+  'NFC-D1': 0,
+  'NFC-D2': 1
+};
+
 // ===============================
 // HELPERS
 // ===============================
@@ -48,18 +56,16 @@ function createTeamElement(name, seed) {
 
 function fillTeamSlot(slot, team) {
   slot.innerHTML = '';
-
   if (!team) {
     slot.classList.add('empty');
     return;
   }
-
   slot.classList.remove('empty');
   slot.appendChild(createTeamElement(team.name, team.seed));
 }
 
 // ===============================
-// UPDATE DIVISIONAL (SAFE)
+// UPDATE DIVISIONAL
 // ===============================
 function updateDivisional(conf) {
   const winners = [...state[conf].wildCard].sort(sortBySeed);
@@ -72,39 +78,36 @@ function updateDivisional(conf) {
 
   const first = firstSeed[conf];
 
-  // --- DIV 1: first seed vs lowest ---
-  const lowest = winners[winners.length - 1]; // lowest seed
+  // DIV 1: first seed vs lowest wildcard
+  const lowest = winners[winners.length - 1]; 
   const remaining = winners.filter(t => t !== lowest);
 
   divMatchups[0].innerHTML = '';
   divMatchups[0].appendChild(createTeamElement(first.name, first.seed));
   if (lowest) divMatchups[0].appendChild(createTeamElement(lowest.name, lowest.seed));
 
-  // --- DIV 2: remaining teams ---
+  // DIV 2: remaining wildcard winners
   divMatchups[1].innerHTML = '';
   remaining.forEach(t => divMatchups[1].appendChild(createTeamElement(t.name, t.seed)));
 }
 
 // ===============================
-// UPDATE CONFERENCE (FIXED)
+// UPDATE CONFERENCE
 // ===============================
 function updateConferenceSlot(conf, divGameId, winner) {
   const confMatchup = conf === 'afc'
     ? document.querySelector('[data-game="AFC-Conf"]')
     : document.querySelector('[data-game="NFC-Conf"]');
 
-  // Map divisional games to conference slot
-  const slotIndex = divGameId.endsWith('D1') ? 0 : 1;
-
-  const slots = confMatchup.querySelectorAll('.team');
+  const slotIndex = divisionalToConfSlot[divGameId];
 
   // Ensure 2 slots exist
-  for (let i = 0; i < 2; i++) {
-    if (!slots[i]) {
-      const emptySlot = document.createElement('div');
-      emptySlot.classList.add('team', 'empty');
-      confMatchup.appendChild(emptySlot);
-    }
+  const slots = Array.from(confMatchup.querySelectorAll('.team'));
+  while (slots.length < 2) {
+    const emptySlot = document.createElement('div');
+    emptySlot.classList.add('team', 'empty');
+    confMatchup.appendChild(emptySlot);
+    slots.push(emptySlot);
   }
 
   const updatedSlots = confMatchup.querySelectorAll('.team');
@@ -140,14 +143,12 @@ function handleTeamClick(teamDiv) {
   // --- Wild Card ---
   if (wildCardConfs[gameId]) {
     const conf = wildCardConfs[gameId];
-
     state[conf].wildCard = state[conf].wildCard.filter(t => t.game !== gameId);
     state[conf].wildCard.push({
       name: teamDiv.dataset.team,
       seed: +teamDiv.dataset.seed,
       game: gameId
     });
-
     updateDivisional(conf);
     return;
   }
@@ -155,24 +156,20 @@ function handleTeamClick(teamDiv) {
   // --- Divisional ---
   if (gameId.includes('-D')) {
     const conf = gameId.startsWith('AFC') ? 'afc' : 'nfc';
-
     updateConferenceSlot(conf, gameId, {
       name: teamDiv.dataset.team,
       seed: +teamDiv.dataset.seed
     });
-
     return;
   }
 
   // --- Conference ---
   if (gameId.includes('Conf')) {
     const conf = gameId.startsWith('AFC') ? 'afc' : 'nfc';
-
     state[conf].conference = [{
       name: teamDiv.dataset.team,
       seed: +teamDiv.dataset.seed
     }];
-
     updateSuperBowl();
   }
 }
@@ -191,17 +188,16 @@ document.getElementById('share-btn').addEventListener('click', async () => {
   const bracketEl = document.getElementById('bracket');
 
   // Use html2canvas to render bracket as image
-  html2canvas(bracketEl, { backgroundColor: null }).then(async canvas => {
+  html2canvas(bracketEl, { backgroundColor: '#ffffff' }).then(async canvas => {
     canvas.toBlob(async blob => {
       const file = new File([blob], 'NFL-Bracket-2026.png', { type: 'image/png' });
 
-      // Try Web Share API for direct sharing
+      // Web Share API if supported
       if (navigator.canShare && navigator.canShare({ files: [file] })) {
         try {
           await navigator.share({
             files: [file],
-            title: 'My 2026 NFL Bracket',
-            text: 'Check out my bracket!'
+            title: 'My 2026 NFL Bracket'
           });
           console.log('Bracket shared successfully!');
         } catch (err) {
@@ -219,4 +215,3 @@ document.getElementById('share-btn').addEventListener('click', async () => {
     }, 'image/png');
   });
 });
-
