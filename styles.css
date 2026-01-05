@@ -1,5 +1,3 @@
-/* styles.css */
-
 /* ===== Body & Bracket Container ===== */
 body {
   font-family: Arial, sans-serif;
@@ -11,7 +9,7 @@ body {
 
 #bracket {
   display: grid;
-  grid-template-columns: repeat(4, 220px);
+  grid-template-columns: 220px 220px 220px 220px;
   gap: 40px;
   align-items: start;
 }
@@ -30,14 +28,22 @@ body {
   color: #333;
 }
 
-/* ===== Matchup Boxes ===== */
-.matchup {
+/* ===== Sub-rounds: AFC left, NFC right ===== */
+.sub-round {
   display: flex;
   flex-direction: column;
+}
+
+.sub-round.nfc {
+  align-items: flex-end; /* mirrors right side */
+}
+
+/* ===== Matchup Boxes ===== */
+.matchup {
   border: 2px solid #ddd;
   border-radius: 8px;
+  margin: 10px 0;
   padding: 5px;
-  margin-bottom: 20px;
   background: #fff;
   position: relative;
 }
@@ -67,7 +73,6 @@ body {
   background-color: #e0f0ff;
 }
 
-/* ===== Selected Team ===== */
 .team.selected {
   background-color: #00bfff;
   color: white;
@@ -75,7 +80,7 @@ body {
   border-color: #0099cc;
 }
 
-/* ===== Connecting Lines (vertical) ===== */
+/* ===== Connecting Lines (optional) ===== */
 .matchup::after {
   content: "";
   position: absolute;
@@ -88,17 +93,6 @@ body {
 
 .round:last-child .matchup::after {
   display: none;
-}
-
-/* ===== Connecting Lines (horizontal / next round) ===== */
-.round:not(:first-child) .matchup::before {
-  content: "";
-  position: absolute;
-  left: -40px;
-  top: 50%;
-  width: 40px;
-  height: 2px;
-  background-color: #ccc;
 }
 
 /* ===== Responsive adjustments ===== */
