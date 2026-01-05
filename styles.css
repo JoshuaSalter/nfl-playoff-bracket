@@ -8,8 +8,8 @@ body {
 
 #bracket {
   display: grid;
-  grid-template-columns: repeat(4, 220px); /* 4 rounds */
-  grid-template-rows: repeat(8, 80px);    /* 8 rows for proper spacing of Wild Card */
+  grid-template-columns: repeat(4, 220px);
+  grid-template-rows: repeat(8, 80px); /* 8 rows for Wild Card spacing */
   gap: 20px;
 }
 
@@ -18,7 +18,7 @@ body {
   text-align: center;
   font-size: 18px;
   font-weight: bold;
-  margin-bottom: 10px;
+  display: flex;
   justify-content: center;
   align-items: center;
 }
@@ -32,9 +32,9 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: center; /* center vertically and horizontally */
   padding: 5px;
-  margin: 0 auto;
+  margin: 0 auto; /* center in column */
 }
 
 /* Teams */
@@ -63,17 +63,15 @@ body {
   background-color: #e0f0ff;
 }
 
-/* ===== Alignment tweaks ===== */
+.team img {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+}
 
-/* Divisional rounds: centered between Wild Card matchups */
-[data-game="AFC-D1"] { grid-column: 2; grid-row: 1 / span 2; justify-self: center; }
-[data-game="AFC-D2"] { grid-column: 2; grid-row: 3 / span 2; justify-self: center; }
-[data-game="NFC-D1"] { grid-column: 2; grid-row: 4 / span 2; justify-self: center; }
-[data-game="NFC-D2"] { grid-column: 2; grid-row: 5 / span 2; justify-self: center; }
-
-/* Conference rounds: centered between Divisional matchups */
-[data-game="AFC-Conf"] { grid-column: 3; grid-row: 2 / span 4; justify-self: center; }
-[data-game="NFC-Conf"] { grid-column: 3; grid-row: 4 / span 4; justify-self: center; }
-
-/* Super Bowl: centered between Conference matchups */
-[data-game="SB"] { grid-column: 4; grid-row: 3 / span 4; justify-self: center; }
+/* Center Divisional, Conference, and Super Bowl matchups vertically between previous round matchups */
+.matchup[style*="grid-column:2"],
+.matchup[style*="grid-column:3"],
+.matchup[style*="grid-column:4"] {
+  align-self: center;
+}
