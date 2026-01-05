@@ -26,6 +26,15 @@ body {
   gap: 30px 40px;
 }
 
+/* Stack Divisional Round Slots vertically */
+#afc-div-1, #afc-div-2, #afc-div-3,
+#nfc-div-1, #nfc-div-2, #nfc-div-3 {
+  display: flex;
+  flex-direction: column; /* Stack vertically */
+  justify-content: center;
+  gap: 10px;
+}
+
 /* Games */
 .game {
   border: 1px solid #333;
@@ -50,6 +59,8 @@ body {
   border: 2px dashed #777;
   height: 32px;
   line-height: 32px;
+  text-align: center;
+  cursor: pointer;
 }
 
 .champ {
