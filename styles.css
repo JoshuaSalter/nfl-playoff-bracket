@@ -18,6 +18,9 @@ body {
   text-align: center;
   font-size: 18px;
   font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* Matchup boxes */
@@ -29,7 +32,9 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center; /* center vertically and horizontally */
   padding: 5px;
+  margin: 0 auto; /* center in column */
 }
 
 /* Teams */
@@ -44,6 +49,7 @@ body {
   font-size: 14px;
   border: 1px solid #ccc;
   background-color: #fafafa;
+  transition: background 0.2s, border 0.2s;
 }
 
 .team.selected {
@@ -61,4 +67,11 @@ body {
   width: 30px;
   height: 30px;
   object-fit: contain;
+}
+
+/* Center Divisional, Conference, and Super Bowl matchups vertically between previous round matchups */
+.matchup[style*="grid-column:2"],
+.matchup[style*="grid-column:3"],
+.matchup[style*="grid-column:4"] {
+  align-self: center;
 }
