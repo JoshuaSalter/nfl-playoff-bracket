@@ -8,149 +8,157 @@
 </head>
 <body>
 
-<div id="bracket">
+<!-- ✅ NEW WRAPPER FOR SCALING -->
+<div id="bracket-wrapper">
 
-  <!-- ===== Wild Card ===== -->
-  <div class="round">
-    <div class="round-label">Wild Card</div>
-    <div class="round-stack">
+  <div id="bracket">
 
-      <!-- AFC -->
-      <div class="matchup" data-game="AFC-WC1">
-        <div class="team" data-team="Patriots" data-seed="2" data-logo="logos/patriots.svg">
-          <img class="logo" src="logos/patriots.svg" alt="Patriots">
-          <span>#2 Patriots</span>
+    <!-- ===== Wild Card ===== -->
+    <div class="round">
+      <div class="round-label">Wild Card</div>
+      <div class="round-stack">
+
+        <!-- AFC -->
+        <div class="matchup" data-game="AFC-WC1">
+          <div class="team" data-team="Patriots" data-seed="2" data-logo="logos/patriots.svg">
+            <img class="logo" src="logos/patriots.svg" alt="Patriots">
+            <span>#2 Patriots</span>
+          </div>
+          <div class="team" data-team="Chargers" data-seed="7" data-logo="logos/chargers.svg">
+            <img class="logo" src="logos/chargers.svg" alt="Chargers">
+            <span>#7 Chargers</span>
+          </div>
         </div>
-        <div class="team" data-team="Chargers" data-seed="7" data-logo="logos/chargers.svg">
-          <img class="logo" src="logos/chargers.svg" alt="Chargers">
-          <span>#7 Chargers</span>
+
+        <div class="matchup" data-game="AFC-WC2">
+          <div class="team" data-team="Jaguars" data-seed="3" data-logo="logos/jaguars.svg">
+            <img class="logo" src="logos/jaguars.svg" alt="Jaguars">
+            <span>#3 Jaguars</span>
+          </div>
+          <div class="team" data-team="Bills" data-seed="6" data-logo="logos/bills.svg">
+            <img class="logo" src="logos/bills.svg" alt="Bills">
+            <span>#6 Bills</span>
+          </div>
         </div>
+
+        <div class="matchup" data-game="AFC-WC3">
+          <div class="team" data-team="Steelers" data-seed="4" data-logo="logos/steelers.svg">
+            <img class="logo" src="logos/steelers.svg" alt="Steelers">
+            <span>#4 Steelers</span>
+          </div>
+          <div class="team" data-team="Texans" data-seed="5" data-logo="logos/texans.svg">
+            <img class="logo" src="logos/texans.svg" alt="Texans">
+            <span>#5 Texans</span>
+          </div>
+        </div>
+
+        <div class="spacer"></div>
+
+        <!-- NFC -->
+        <div class="matchup" data-game="NFC-WC1">
+          <div class="team" data-team="Bears" data-seed="2" data-logo="logos/bears.svg">
+            <img class="logo" src="logos/bears.svg" alt="Bears">
+            <span>#2 Bears</span>
+          </div>
+          <div class="team" data-team="Packers" data-seed="7" data-logo="logos/packers.svg">
+            <img class="logo" src="logos/packers.svg" alt="Packers">
+            <span>#7 Packers</span>
+          </div>
+        </div>
+
+        <div class="matchup" data-game="NFC-WC2">
+          <div class="team" data-team="Eagles" data-seed="3" data-logo="logos/eagles.svg">
+            <img class="logo" src="logos/eagles.svg" alt="Eagles">
+            <span>#3 Eagles</span>
+          </div>
+          <div class="team" data-team="49ers" data-seed="6" data-logo="logos/49ers.svg">
+            <img class="logo" src="logos/49ers.svg" alt="49ers">
+            <span>#6 49ers</span>
+          </div>
+        </div>
+
+        <div class="matchup" data-game="NFC-WC3">
+          <div class="team" data-team="Panthers" data-seed="4" data-logo="logos/panthers.svg">
+            <img class="logo" src="logos/panthers.svg" alt="Panthers">
+            <span>#4 Panthers</span>
+          </div>
+          <div class="team" data-team="Rams" data-seed="5" data-logo="logos/rams.svg">
+            <img class="logo" src="logos/rams.svg" alt="Rams">
+            <span>#5 Rams</span>
+          </div>
+        </div>
+
       </div>
-
-      <div class="matchup" data-game="AFC-WC2">
-        <div class="team" data-team="Jaguars" data-seed="3" data-logo="logos/jaguars.svg">
-          <img class="logo" src="logos/jaguars.svg" alt="Jaguars">
-          <span>#3 Jaguars</span>
-        </div>
-        <div class="team" data-team="Bills" data-seed="6" data-logo="logos/bills.svg">
-          <img class="logo" src="logos/bills.svg" alt="Bills">
-          <span>#6 Bills</span>
-        </div>
-      </div>
-
-      <div class="matchup" data-game="AFC-WC3">
-        <div class="team" data-team="Steelers" data-seed="4" data-logo="logos/steelers.svg">
-          <img class="logo" src="logos/steelers.svg" alt="Steelers">
-          <span>#4 Steelers</span>
-        </div>
-        <div class="team" data-team="Texans" data-seed="5" data-logo="logos/texans.svg">
-          <img class="logo" src="logos/texans.svg" alt="Texans">
-          <span>#5 Texans</span>
-        </div>
-      </div>
-      <div class="spacer"></div>
-      <!-- NFC -->
-      <div class="matchup" data-game="NFC-WC1">
-        <div class="team" data-team="Bears" data-seed="2" data-logo="logos/bears.svg">
-          <img class="logo" src="logos/bears.svg" alt="Bears">
-          <span>#2 Bears</span>
-        </div>
-        <div class="team" data-team="Packers" data-seed="7" data-logo="logos/packers.svg">
-          <img class="logo" src="logos/packers.svg" alt="Packers">
-          <span>#7 Packers</span>
-        </div>
-      </div>
-
-      <div class="matchup" data-game="NFC-WC2">
-        <div class="team" data-team="Eagles" data-seed="3" data-logo="logos/eagles.svg">
-          <img class="logo" src="logos/eagles.svg" alt="Eagles">
-          <span>#3 Eagles</span>
-        </div>
-        <div class="team" data-team="49ers" data-seed="6" data-logo="logos/49ers.svg">
-          <img class="logo" src="logos/49ers.svg" alt="49ers">
-          <span>#6 49ers</span>
-        </div>
-      </div>
-
-      <div class="matchup" data-game="NFC-WC3">
-        <div class="team" data-team="Panthers" data-seed="4" data-logo="logos/panthers.svg">
-          <img class="logo" src="logos/panthers.svg" alt="Panthers">
-          <span>#4 Panthers</span>
-        </div>
-        <div class="team" data-team="Rams" data-seed="5" data-logo="logos/rams.svg">
-          <img class="logo" src="logos/rams.svg" alt="Rams">
-          <span>#5 Rams</span>
-        </div>
-      </div>
-
     </div>
-  </div>
 
-  <!-- ===== Divisional ===== -->
-  <div class="round">
-    <div class="round-label">Divisional</div>
-    <div class="round-stack">
-    <div class="spacer" style="height: 60px;"></div>
-      <div class="matchup" data-game="AFC-D1">
-        <div class="team" data-team="Broncos" data-seed="1" data-logo="logos/broncos.svg">
-          <img class="logo" src="logos/broncos.svg" alt="Broncos">
-          <span>#1 Broncos</span>
+    <!-- ===== Divisional ===== -->
+    <div class="round">
+      <div class="round-label">Divisional</div>
+      <div class="round-stack">
+        <div class="spacer" style="height: 60px;"></div>
+
+        <div class="matchup" data-game="AFC-D1">
+          <div class="team" data-team="Broncos" data-seed="1" data-logo="logos/broncos.svg">
+            <img class="logo" src="logos/broncos.svg" alt="Broncos">
+            <span>#1 Broncos</span>
+          </div>
+          <div class="team empty"></div>
         </div>
-        <div class="team empty"></div>
-      </div>
 
-      <div class="matchup" data-game="AFC-D2">
-        <div class="team empty"></div>
-        <div class="team empty"></div>
-      </div>
-      <div class="matchup" data-game="NFC-D1">
-        <div class="team" data-team="Seahawks" data-seed="1" data-logo="logos/seahawks.svg">
-          <img class="logo" src="logos/seahawks.svg" alt="Seahawks">
-          <span>#1 Seahawks</span>
+        <div class="matchup" data-game="AFC-D2">
+          <div class="team empty"></div>
+          <div class="team empty"></div>
         </div>
-        <div class="team empty"></div>
-      </div>
 
-      <div class="matchup" data-game="NFC-D2">
-        <div class="team empty"></div>
-        <div class="team empty"></div>
-      </div>
+        <div class="matchup" data-game="NFC-D1">
+          <div class="team" data-team="Seahawks" data-seed="1" data-logo="logos/seahawks.svg">
+            <img class="logo" src="logos/seahawks.svg" alt="Seahawks">
+            <span>#1 Seahawks</span>
+          </div>
+          <div class="team empty"></div>
+        </div>
 
+        <div class="matchup" data-game="NFC-D2">
+          <div class="team empty"></div>
+          <div class="team empty"></div>
+        </div>
+
+      </div>
     </div>
-  </div>
 
-  <!-- ===== Conference ===== -->
-  <div class="round">
-    
-    <div class="round-label">Conference</div>
-    <div class="round-stack">
-    <div class="spacer" style="height: 60px;"></div>
-      <div class="matchup" data-game="AFC-Conf">
-        <div class="team empty"></div>
-        <div class="team empty"></div>
-      </div>
-      <div class="spacer"></div>
-      <div class="matchup" data-game="NFC-Conf">
-        <div class="team empty"></div>
-        <div class="team empty"></div>
-      </div>
+    <!-- ===== Conference ===== -->
+    <div class="round">
+      <div class="round-label">Conference</div>
+      <div class="round-stack">
+        <div class="spacer" style="height: 60px;"></div>
 
+        <div class="matchup" data-game="AFC-Conf">
+          <div class="team empty"></div>
+          <div class="team empty"></div>
+        </div>
+
+        <div class="spacer"></div>
+
+        <div class="matchup" data-game="NFC-Conf">
+          <div class="team empty"></div>
+          <div class="team empty"></div>
+        </div>
+
+      </div>
     </div>
-  </div>
 
-  <!-- ===== Super Bowl ===== -->
-  <div class="round">
-    <div class="round-label">Super Bowl</div>
-    <div class="round-stack">
-
-      <div class="matchup" data-game="SB">
-        <div class="team empty"></div>
-        <div class="team empty"></div>
+    <!-- ===== Super Bowl ===== -->
+    <div class="round">
+      <div class="round-label">Super Bowl</div>
+      <div class="round-stack">
+        <div class="matchup" data-game="SB">
+          <div class="team empty"></div>
+          <div class="team empty"></div>
+        </div>
       </div>
-
     </div>
-  </div>
 
+  </div>
 </div>
 
 <script src="script.js"></script>
