@@ -178,26 +178,30 @@ body {
 /* =========================
    SHARE BUTTON
 ========================= */
-#shareBracket {
-  position: fixed;          /* fixed to viewport */
-  bottom: 20px;             /* 20px from bottom */
-  right: 20px;              /* 20px from right */
-  padding: 8px 12px;        /* smaller size */
-  font-size: 12px;          /* smaller text */
+#share-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  height: 50px;           /* explicit height */
+  padding: 0 12px;        /* horizontal padding only */
+  font-size: 12px;
   border-radius: 6px;
   border: none;
   cursor: pointer;
   background: #00bfff;
   color: white;
   transition: background 0.2s, transform 0.2s;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.2);  /* subtle shadow */
-  z-index: 1000;            /* stay above bracket */
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+  z-index: 1000;
+  display: flex;          /* center text vertically */
+  align-items: center;    /* vertical centering */
+  justify-content: center;
+}
+#share-btn:hover {
+  background: #009edb;
+  transform: scale(1.05);
 }
 
-#shareBracket:hover {
-  background: #009edb;
-  transform: scale(1.05);    /* slight hover pop */
-}
 
 
 /* =========================
