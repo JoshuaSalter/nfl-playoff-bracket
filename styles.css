@@ -213,3 +213,19 @@ body {
   }
 }
 
+#printBracket {
+  margin-bottom: 20px;
+  padding: 10px 16px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  background: #00bfff;
+  color: white;
+}
+
+#printBracket:hover {
+  background: #009edb;
+}
+
+
