@@ -67,7 +67,6 @@
   </div>
 
   <!-- ===== Round 2: Divisional ===== -->
-  <!-- AFC Divisional -->
   <div class="matchup" style="grid-column:2; grid-row:1 / span 2;" data-game="AFC-D1">
     <div class="team" data-team="AFC1" data-seed="1">AFC 1</div>
     <div class="team"></div>
@@ -77,7 +76,6 @@
     <div class="team"></div>
   </div>
 
-  <!-- NFC Divisional -->
   <div class="matchup" style="grid-column:2; grid-row:4 / span 2;" data-game="NFC-D1">
     <div class="team" data-team="NFC1" data-seed="1">NFC 1</div>
     <div class="team"></div>
@@ -105,101 +103,6 @@
 
 </div>
 
-<script>
-// State to track winners
-const state = {
-  afc: { wildCard: [], divisional: [], conference: [] },
-  nfc: { wildCard: [], divisional: [], conference: [] }
-};
-
-// Handle Wild Card clicks
-document.querySelectorAll('.matchup[data-game$="WC1"], .matchup[data-game$="WC2"], .matchup[data-game$="WC3"]').forEach(matchup => {
-  matchup.querySelectorAll('.team').forEach(team => {
-    team.addEventListener('click', () => {
-      matchup.querySelectorAll('.team').forEach(t => t.classList.remove('selected'));
-      team.classList.add('selected');
-
-      const conf = team.dataset.team.startsWith('AFC') ? 'afc' : 'nfc';
-      const seed = parseInt(team.dataset.seed);
-      const name = team.textContent;
-      const game = matchup.dataset.game;
-
-      // Save winner
-      state[conf].wildCard = state[conf].wildCard.filter(t => t.game !== game);
-      state[conf].wildCard.push({ name, seed, game });
-
-      // Once all 3 Wild Card winners are selected, populate Divisional round
-      if (state[conf].wildCard.length === 3) populateDivisional(conf);
-    });
-  });
-});
-
-// Populate Divisional Round with reseeding
-function populateDivisional(conf) {
-  const winners = [...state[conf].wildCard].sort((a,b) => a.seed - b.seed);
-  const byeSeed = conf === 'afc' ? { name: 'AFC 1', seed: 1 } : { name: 'NFC 1', seed: 1 };
-
-  // Lowest seed plays #1
-  const lowest = winners.pop();
-  const nextMatchup1 = document.querySelector(`[data-game="${conf.toUpperCase()}-D1"]`);
-  nextMatchup1.children[0].textContent = byeSeed.name;
-  nextMatchup1.children[0].dataset.seed = byeSeed.seed;
-  nextMatchup1.children[0].dataset.team = byeSeed.name.replace(' ','');
-  nextMatchup1.children[1].textContent = lowest.name;
-  nextMatchup1.children[1].dataset.seed = lowest.seed;
-  nextMatchup1.children[1].dataset.team = lowest.name.replace(' ','');
-
-  // Remaining two play each other
-  const nextMatchup2 = document.querySelector(`[data-game="${conf.toUpperCase()}-D2"]`);
-  nextMatchup2.children[0].textContent = winners[0].name;
-  nextMatchup2.children[0].dataset.seed = winners[0].seed;
-  nextMatchup2.children[0].dataset.team = winners[0].name.replace(' ','');
-  nextMatchup2.children[1].textContent = winners[1].name;
-  nextMatchup2.children[1].dataset.seed = winners[1].seed;
-  nextMatchup2.children[1].dataset.team = winners[1].name.replace(' ','');
-}
-
-// Handle Divisional -> Conference -> Super Bowl clicks
-document.querySelectorAll('.matchup').forEach(matchup => {
-  matchup.querySelectorAll('.team').forEach(team => {
-    team.addEventListener('click', () => {
-      matchup.querySelectorAll('.team').forEach(t => t.classList.remove('selected'));
-      team.classList.add('selected');
-
-      const gameId = matchup.dataset.game;
-      let nextMatchup;
-
-      // Divisional -> Conference
-      if (gameId.includes('D')) {
-        const conf = gameId.startsWith('AFC') ? 'afc' : 'nfc';
-        state[conf].divisional = state[conf].divisional.filter(t => t.game !== gameId);
-        state[conf].divisional.push({ name: team.textContent, seed: parseInt(team.dataset.seed), game: gameId });
-
-        const divMatchups = Array.from(document.querySelectorAll(`[data-game^="${conf.toUpperCase()}-D"]`));
-        const selectedTeams = divMatchups.map(m => m.querySelector('.team.selected')).filter(t=>t);
-        if (selectedTeams.length === 2) {
-          const sorted = selectedTeams.sort((a,b)=>parseInt(a.dataset.seed)-parseInt(b.dataset.seed));
-          const confMatchup = document.querySelector(`[data-game="${conf.toUpperCase()}-Conf"]`);
-          confMatchup.children[0].textContent = sorted[0].textContent;
-          confMatchup.children[0].dataset.team = sorted[0].dataset.team;
-          confMatchup.children[0].dataset.seed = sorted[0].dataset.seed;
-          confMatchup.children[1].textContent = sorted[1].textContent;
-          confMatchup.children[1].dataset.team = sorted[1].dataset.team;
-          confMatchup.children[1].dataset.seed = sorted[1].dataset.seed;
-        }
-      }
-
-      // Conference -> Super Bowl
-      if (gameId.includes('Conf')) {
-        nextMatchup = document.querySelector('[data-game="SB"]');
-        const conf = gameId.startsWith('AFC') ? 'afc' : 'nfc';
-        if(nextMatchup.children[0].textContent==="") nextMatchup.children[0].textContent = team.textContent;
-        else nextMatchup.children[1].textContent = team.textContent;
-      }
-    });
-  });
-});
-</script>
-
+<script src="bracket.js"></script>
 </body>
 </html>
