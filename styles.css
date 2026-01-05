@@ -10,7 +10,7 @@ body {
   display: grid;
   grid-template-columns: repeat(4, 220px); /* 4 rounds */
   grid-template-rows: repeat(8, 80px);    /* 8 rows for proper spacing of Wild Card */
-  gap: 10px;
+  gap: 20px;
 }
 
 /* Round labels */
@@ -19,6 +19,8 @@ body {
   font-size: 18px;
   font-weight: bold;
   margin-bottom: 10px;
+  justify-content: center;
+  align-items: center;
 }
 
 /* Matchup boxes */
@@ -30,7 +32,9 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   padding: 5px;
+  margin: 0 auto;
 }
 
 /* Teams */
@@ -45,6 +49,7 @@ body {
   font-size: 14px;
   border: 1px solid #ccc;
   background-color: #fafafa;
+  transition: background 0.2s, border 0.2s;
 }
 
 .team.selected {
