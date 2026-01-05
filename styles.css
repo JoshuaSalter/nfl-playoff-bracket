@@ -175,21 +175,30 @@ body {
 /* =========================
    SHARE BUTTON
 ========================= */
+/* =========================
+   SHARE BUTTON
+========================= */
 #shareBracket {
-  margin-bottom: 20px;
-  padding: 10px 16px;
-  font-size: 14px;
+  position: fixed;          /* fixed to viewport */
+  bottom: 20px;             /* 20px from bottom */
+  right: 20px;              /* 20px from right */
+  padding: 8px 12px;        /* smaller size */
+  font-size: 12px;          /* smaller text */
   border-radius: 6px;
   border: none;
   cursor: pointer;
   background: #00bfff;
   color: white;
-  transition: background 0.2s;
+  transition: background 0.2s, transform 0.2s;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);  /* subtle shadow */
+  z-index: 1000;            /* stay above bracket */
 }
 
 #shareBracket:hover {
   background: #009edb;
+  transform: scale(1.05);    /* slight hover pop */
 }
+
 
 /* =========================
    PRINT / HIDDEN STYLES
