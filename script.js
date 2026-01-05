@@ -188,26 +188,35 @@ document.querySelectorAll('.team').forEach(team =>
 // SHARE BUTTON
 // ===============================
 document.getElementById('share-btn').addEventListener('click', async () => {
-  const afcConf = state.afc.conference.map(t => `#${t.seed} ${t.name}`).join(' vs ');
-  const nfcConf = state.nfc.conference.map(t => `#${t.seed} ${t.name}`).join(' vs ');
-  const sb = state.afc.conference[0] && state.nfc.conference[0]
-    ? `Super Bowl: #${state.afc.conference[0].seed} ${state.afc.conference[0].name} vs #${state.nfc.conference[0].seed} ${state.nfc.conference[0].name}`
-    : 'Super Bowl: TBD';
+  const bracketEl = document.getElementById('bracket');
 
-  const shareData = {
-    title: 'My 2026 NFL Bracket',
-    text: `AFC: ${afcConf}\nNFC: ${nfcConf}\n${sb}`,
-    url: window.location.href
-  };
+  // Use html2canvas to render bracket as image
+  html2canvas(bracketEl, { backgroundColor: null }).then(async canvas => {
+    canvas.toBlob(async blob => {
+      const file = new File([blob], 'NFL-Bracket-2026.png', { type: 'image/png' });
 
-  try {
-    if (navigator.share) {
-      await navigator.share(shareData);
-      console.log('Bracket shared successfully!');
-    } else {
-      alert('Your browser does not support sharing. Copy this text instead:\n\n' + shareData.text);
-    }
-  } catch (err) {
-    console.error('Error sharing:', err);
-  }
+      // Try Web Share API for direct sharing
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        try {
+          await navigator.share({
+            files: [file],
+            title: 'My 2026 NFL Bracket',
+            text: 'Check out my bracket!'
+          });
+          console.log('Bracket shared successfully!');
+        } catch (err) {
+          console.error('Error sharing:', err);
+        }
+      } else {
+        // Fallback: save to files
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(file);
+        link.download = 'NFL-Bracket-2026.png';
+        link.click();
+        URL.revokeObjectURL(link.href);
+        alert('Bracket image downloaded! You can now share it.');
+      }
+    }, 'image/png');
+  });
 });
+
