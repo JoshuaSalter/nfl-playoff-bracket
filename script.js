@@ -6,13 +6,13 @@ const state = {
   nfc: { wildCard: [], divisional: [], conference: [] }
 };
 
-// First seeds automatically in Divisional round
+// First seeds
 const firstSeed = {
-  afc: { name: 'AFC1', seed: 1, logo: 'logos/afc1.svg' },
-  nfc: { name: 'NFC1', seed: 1, logo: 'logos/nfc1.svg' }
+  afc: { name: 'Broncos', seed: 1, logo: 'logos/broncos.svg' },
+  nfc: { name: 'Seahawks', seed: 1, logo: 'logos/seahawks.svg' }
 };
 
-// Map Wild Card games to conferences
+// Wild Card → Conference map
 const wildCardConfs = {
   'AFC-WC1': 'afc',
   'AFC-WC2': 'afc',
@@ -23,192 +23,146 @@ const wildCardConfs = {
 };
 
 // ===============================
-// HELPER FUNCTIONS
+// HELPERS
 // ===============================
-function sortBySeed(a, b) { return a.seed - b.seed; }
+const sortBySeed = (a, b) => a.seed - b.seed;
 
-// Create a team element with logo and text
 function createTeamElement(name, seed, logoPath) {
   const teamDiv = document.createElement('div');
-  teamDiv.classList.add('team');
+  teamDiv.className = 'team';
   teamDiv.dataset.team = name;
   teamDiv.dataset.seed = seed;
 
   const img = document.createElement('img');
   img.src = logoPath;
   img.alt = name;
-  img.classList.add('logo');
 
   const span = document.createElement('span');
   span.textContent = `#${seed} ${name}`;
 
-  teamDiv.appendChild(img);
-  teamDiv.appendChild(span);
-
-  // Click handler for this new element
+  teamDiv.append(img, span);
   teamDiv.addEventListener('click', () => handleTeamClick(teamDiv));
 
   return teamDiv;
 }
 
 // ===============================
-// UPDATE DIVISIONAL MATCHUPS
+// UPDATE DIVISIONAL
 // ===============================
 function updateDivisional(conf) {
   const winners = [...state[conf].wildCard].sort(sortBySeed);
-
-  const divMatchups = conf === 'afc'
-    ? [document.querySelector('[data-game="AFC-D1"]'), document.querySelector('[data-game="AFC-D2"]')]
-    : [document.querySelector('[data-game="NFC-D1"]'), document.querySelector('[data-game="NFC-D2"]')];
-
   if (winners.length === 0) return;
 
-  const first = firstSeed[conf];
+  const div1 = document.querySelector(`[data-game="${conf.toUpperCase()}-D1"]`);
+  const div2 = document.querySelector(`[data-game="${conf.toUpperCase()}-D2"]`);
+
   const lowest = winners[winners.length - 1];
-  const remaining = winners.filter(t => t.name !== lowest.name);
+  const remaining = winners.filter(t => t !== lowest);
 
-  // --- DIV 1: first seed vs lowest ---
-  const div1 = divMatchups[0];
+  // Clear slots except first seed
+  div1.children[1].replaceWith(
+    createTeamElement(lowest.name, lowest.seed, `logos/${lowest.name.toLowerCase()}.svg`)
+  );
 
-  // FIRST SEED: preserve if already exists
-  if (!div1.children[0] || !div1.children[0].dataset.team) {
-    div1.insertBefore(
-      createTeamElement(first.name, first.seed, first.logo),
-      div1.children[0] || null
-    );
-  }
-
-  // LOWEST SEED: update or insert
-  if (lowest) {
-    if (div1.children[1]) {
-      div1.replaceChild(
-        createTeamElement(lowest.name, lowest.seed, `logos/${lowest.name.toLowerCase()}.svg`),
-        div1.children[1]
-      );
-    } else {
-      div1.appendChild(
-        createTeamElement(lowest.name, lowest.seed, `logos/${lowest.name.toLowerCase()}.svg`)
-      );
-    }
-  }
-
-  // --- DIV 2: remaining two teams ---
-  const div2 = divMatchups[1];
-
-  for (let i = 0; i < 2; i++) {
-    const team = remaining[i];
-    if (team) {
-      if (div2.children[i]) {
-        div2.replaceChild(
-          createTeamElement(team.name, team.seed, `logos/${team.name.toLowerCase()}.svg`),
-          div2.children[i]
-        );
-      } else {
-        div2.appendChild(
-          createTeamElement(team.name, team.seed, `logos/${team.name.toLowerCase()}.svg`)
-        );
-      }
-    }
-  }
+  div2.innerHTML = '';
+  remaining.forEach(t =>
+    div2.appendChild(
+      createTeamElement(t.name, t.seed, `logos/${t.name.toLowerCase()}.svg`)
+    )
+  );
 }
 
 // ===============================
-// UPDATE CONFERENCE SLOT
+// UPDATE CONFERENCE
 // ===============================
-function updateConferenceSlot(conf, divGameId, winner) {
-  const confMatchup = conf === 'afc'
-    ? document.querySelector('[data-game="AFC-Conf"]')
-    : document.querySelector('[data-game="NFC-Conf"]');
+function updateConferenceSlot(conf, gameId, winner) {
+  const matchup = document.querySelector(
+    `[data-game="${conf.toUpperCase()}-Conf"]`
+  );
 
-  let slotIndex = 0;
-  if (conf === 'afc') slotIndex = divGameId === 'AFC-D1' ? 0 : 1;
-  else slotIndex = divGameId === 'NFC-D1' ? 0 : 1;
+  const index =
+    (conf === 'afc' && gameId === 'AFC-D1') ||
+    (conf === 'nfc' && gameId === 'NFC-D1')
+      ? 0
+      : 1;
 
-  // Clear old slot
-  const slot = confMatchup.children[slotIndex];
-  slot.innerHTML = '';
-  slot.appendChild(createTeamElement(winner.name, winner.seed, `logos/${winner.name.toLowerCase()}.svg`));
+  matchup.children[index].replaceWith(
+    createTeamElement(
+      winner.name,
+      winner.seed,
+      `logos/${winner.name.toLowerCase()}.svg`
+    )
+  );
 
-  state[conf].conference = state[conf].conference.filter(t => t.game !== 'conference');
-  state[conf].conference.push({ ...winner, game: 'conference' });
+  state[conf].conference = [{ ...winner }];
 }
 
 // ===============================
-// UPDATE SUPER BOWL
+// UPDATE SUPER BOWL (SAFE)
 // ===============================
 function updateSuperBowl() {
+  if (!state.afc.conference[0] || !state.nfc.conference[0]) return;
+
   const sb = document.querySelector('[data-game="SB"]');
-  sb.innerHTML = ''; // clear old
+  sb.innerHTML = '';
 
-  const afcWinner = state.afc.conference[0];
-  const nfcWinner = state.nfc.conference[0];
-
-  if (afcWinner) sb.appendChild(createTeamElement(afcWinner.name, afcWinner.seed, `logos/${afcWinner.name.toLowerCase()}.svg`));
-  if (nfcWinner) sb.appendChild(createTeamElement(nfcWinner.name, nfcWinner.seed, `logos/${nfcWinner.name.toLowerCase()}.svg`));
+  ['afc', 'nfc'].forEach(conf => {
+    const t = state[conf].conference[0];
+    sb.appendChild(
+      createTeamElement(t.name, t.seed, `logos/${t.name.toLowerCase()}.svg`)
+    );
+  });
 }
 
 // ===============================
-// HANDLE TEAM CLICK
+// CLICK HANDLER
 // ===============================
 function handleTeamClick(teamDiv) {
-  const matchup = teamDiv.parentElement;
+  const matchup = teamDiv.closest('.matchup');
+  if (!matchup || !matchup.dataset.game) return;
+
   const gameId = matchup.dataset.game;
 
-  // Highlight selected team
   matchup.querySelectorAll('.team').forEach(t => t.classList.remove('selected'));
   teamDiv.classList.add('selected');
 
   // --- Wild Card ---
   if (wildCardConfs[gameId]) {
     const conf = wildCardConfs[gameId];
-    const winner = {
-      name: teamDiv.dataset.team,
-      seed: parseInt(teamDiv.dataset.seed),
-      game: gameId
-    };
     state[conf].wildCard = state[conf].wildCard.filter(t => t.game !== gameId);
-    state[conf].wildCard.push(winner);
+    state[conf].wildCard.push({
+      name: teamDiv.dataset.team,
+      seed: +teamDiv.dataset.seed,
+      game: gameId
+    });
     updateDivisional(conf);
     return;
   }
 
   // --- Divisional ---
-  if (gameId.includes('D')) {
+  if (gameId.includes('-D')) {
     const conf = gameId.startsWith('AFC') ? 'afc' : 'nfc';
-    const winner = {
+    updateConferenceSlot(conf, gameId, {
       name: teamDiv.dataset.team,
-      seed: parseInt(teamDiv.dataset.seed),
-      game: gameId
-    };
-    state[conf].divisional = state[conf].divisional.filter(t => t.game !== gameId);
-    state[conf].divisional.push(winner);
-
-    // ONLY update Conference matchup here
-    updateConferenceSlot(conf, gameId, winner);
-    return; // ✅ DO NOT update Super Bowl yet
+      seed: +teamDiv.dataset.seed
+    });
+    return;
   }
 
   // --- Conference ---
   if (gameId.includes('Conf')) {
     const conf = gameId.startsWith('AFC') ? 'afc' : 'nfc';
-    const winner = {
+    state[conf].conference = [{
       name: teamDiv.dataset.team,
-      seed: parseInt(teamDiv.dataset.seed),
-      game: gameId
-    };
-    state[conf].conference = state[conf].conference.filter(
-      t => t.game !== 'conference'
-);
-    state[conf].conference.push({ ...winner, game: 'conference' });
-
-    updateSuperBowl(); // ✅ only update SB when Conference winner is picked
-    return;
+      seed: +teamDiv.dataset.seed
+    }];
+    updateSuperBowl();
   }
 }
 
 // ===============================
-// INITIALIZE EXISTING TEAMS
+// INIT
 // ===============================
-document.querySelectorAll('.team').forEach(team => {
-  team.addEventListener('click', () => handleTeamClick(team));
-});
+document.querySelectorAll('.team').forEach(t =>
+  t.addEventListener('click', () => handleTeamClick(t))
+);
