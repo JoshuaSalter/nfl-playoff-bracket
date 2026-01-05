@@ -10,7 +10,7 @@ body {
 #bracket {
   display: grid;
   grid-template-columns: 220px 220px 220px 220px;
-  gap: 40px;
+  gap: 20px; /* tighter spacing between columns */
   align-items: start;
 }
 
@@ -80,7 +80,7 @@ body {
   border-color: #0099cc;
 }
 
-/* ===== Connecting Lines (optional) ===== */
+/* ===== Connecting Lines (optional, for future) ===== */
 .matchup::after {
   content: "";
   position: absolute;
