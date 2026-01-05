@@ -11,11 +11,23 @@ body {
 }
 
 /* =========================
+   BRACKET WRAPPER (NEW)
+   Handles scaling on mobile
+========================= */
+#bracket-wrapper {
+  width: 100%;
+  overflow-x: auto;          /* allow scroll if needed */
+  display: flex;
+  justify-content: center;
+}
+
+/* =========================
    BRACKET CONTAINER
 ========================= */
 #bracket {
   display: flex;
-  gap: 60px; /* horizontal spacing between rounds */
+  gap: 60px;
+  transform-origin: top center;
 }
 
 /* =========================
@@ -26,10 +38,12 @@ body {
   flex-direction: column;
   align-items: center;
 }
+
 .spacer {
-  height: 60px; /* adjust this for your preferred gap */
+  height: 60px;
   width: 100%;
 }
+
 /* Round title */
 .round-label {
   font-weight: bold;
@@ -43,7 +57,7 @@ body {
   flex-direction: column;
   justify-content: center;
   gap: 30px;
-  min-height: 800px; /* ensures spacing between top and bottom matchups */
+  min-height: 800px;
 }
 
 /* =========================
@@ -51,6 +65,8 @@ body {
 ========================= */
 .matchup {
   width: 200px;
+  min-width: 200px;
+  max-width: 200px;
   border: 2px solid #ddd;
   border-radius: 8px;
   background: #fff;
@@ -58,18 +74,19 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  box-sizing: border-box;
 }
 
 /* =========================
    TEAM BOX
 ========================= */
 .team {
+  display: flex;
   align-items: center;
-  display: flex; 
   gap: 8px;
   padding: 8px 10px;
-  max-width: 200px;      /* prevents matchup from expanding */
-  overflow: hidden;      /* hides anything outside */
+  max-width: 100%;
+  overflow: hidden;
   box-sizing: border-box;
   margin: 3px 0;
   border-radius: 4px;
@@ -81,29 +98,25 @@ body {
 
 /* Team logo */
 .team img {
-  width: 24px;          /* fixed width */
-  height: 24px;         /* fixed height */
-  max-width: 100%;      /* ensures it doesn’t overflow container */
-  max-height: 100%;
-  object-fit: contain;   /* keeps aspect ratio */
-  flex-shrink: 0;        /* prevents squishing */
-  display: block;        /* removes inline spacing issues */
-}
-
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  flex-shrink: 0;
+  display: block;
 }
 
 /* Team name text */
 .team span {
-  white-space: nowrap;    /* prevents wrapping */
+  white-space: nowrap;
   font-size: 14px;
 }
 
-/* Hover effect */
+/* Hover */
 .team:hover {
   background: #e6f4ff;
 }
 
-/* Selected / winner team */
+/* Selected / winner */
 .team.selected {
   background: #00bfff;
   color: #fff;
@@ -112,7 +125,7 @@ body {
 }
 
 /* =========================
-   EMPTY TEAMS (for slots)
+   EMPTY TEAMS
 ========================= */
 .team.empty {
   background: #fff;
@@ -124,7 +137,7 @@ body {
 }
 
 /* =========================
-   OPTIONAL: SUPER BOWL / CHAMPIONS
+   CHAMPION STYLING
 ========================= */
 .round .matchup .team.champ {
   font-weight: bold;
@@ -133,26 +146,29 @@ body {
 }
 
 /* =========================
-   RESPONSIVE TIP
+   RESPONSIVE SCALING
+   (THIS IS THE FIX)
 ========================= */
+@media (max-width: 1200px) {
+  #bracket {
+    transform: scale(0.9);
+  }
+}
+
 @media (max-width: 1000px) {
   #bracket {
-    flex-direction: column;
-    gap: 40px;
-    align-items: center;
+    transform: scale(0.8);
   }
-
-  .matchup {
-  width: 200px;
-  min-width: 200px;      /* ensures consistent width */
-  max-width: 200px;
-  border: 2px solid #ddd;
-  border-radius: 8px;
-  background: #fff;
-  padding: 6px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  box-sizing: border-box;
 }
+
+@media (max-width: 800px) {
+  #bracket {
+    transform: scale(0.7);
+  }
+}
+
+@media (max-width: 600px) {
+  #bracket {
+    transform: scale(0.6);
+  }
 }
