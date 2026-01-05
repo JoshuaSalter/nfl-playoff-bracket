@@ -76,65 +76,46 @@ function updateDivisional(conf) {
   const lowest = winners[winners.length - 1]; // lowest seed
   const remaining = winners.filter(t => t !== lowest);
 
-  // Clear div1 but preserve first seed
   divMatchups[0].innerHTML = '';
-  divMatchups[0].appendChild(createTeamElement(first.name, first.seed, first.logo));
-  if (lowest) {
-    divMatchups[0].appendChild(
-      createTeamElement(lowest.name, lowest.seed, `logos/${lowest.name.toLowerCase()}.svg`)
-    );
-  }
+  divMatchups[0].appendChild(createTeamElement(first.name, first.seed));
+  if (lowest) divMatchups[0].appendChild(createTeamElement(lowest.name, lowest.seed));
 
   // --- DIV 2: remaining teams ---
   divMatchups[1].innerHTML = '';
-  remaining.forEach(t =>
-    divMatchups[1].appendChild(
-      createTeamElement(t.name, t.seed, `logos/${t.name.toLowerCase()}.svg`)
-    )
-  );
+  remaining.forEach(t => divMatchups[1].appendChild(createTeamElement(t.name, t.seed)));
 }
 
-
 // ===============================
-// UPDATE CONFERENCE (SAFE)
+// UPDATE CONFERENCE (FIXED)
 // ===============================
-function updateConferenceSlot(conf, winner) {
+function updateConferenceSlot(conf, divGameId, winner) {
   const confMatchup = conf === 'afc'
     ? document.querySelector('[data-game="AFC-Conf"]')
     : document.querySelector('[data-game="NFC-Conf"]');
 
-  // Get existing team slots
-  let slots = Array.from(confMatchup.querySelectorAll('.team'));
+  // Map divisional games to conference slot
+  const slotIndex = divGameId.endsWith('D1') ? 0 : 1;
+
+  const slots = confMatchup.querySelectorAll('.team');
 
   // Ensure 2 slots exist
-  while (slots.length < 2) {
-    const emptySlot = document.createElement('div');
-    emptySlot.classList.add('team', 'empty');
-    confMatchup.appendChild(emptySlot);
-    slots.push(emptySlot);
+  for (let i = 0; i < 2; i++) {
+    if (!slots[i]) {
+      const emptySlot = document.createElement('div');
+      emptySlot.classList.add('team', 'empty');
+      confMatchup.appendChild(emptySlot);
+    }
   }
 
-  // Find first empty slot
-  let slotIndex = slots.findIndex(s => s.classList.contains('empty'));
-  if (slotIndex === -1) slotIndex = 0; // fallback to slot 0
-
-  // Replace empty slot with winner
-  slots[slotIndex].replaceWith(
-    createTeamElement(
-      winner.name,
-      winner.seed,
-      `logos/${winner.name.toLowerCase()}.svg`
-    )
-  );
+  const updatedSlots = confMatchup.querySelectorAll('.team');
+  updatedSlots[slotIndex].replaceWith(createTeamElement(winner.name, winner.seed));
 
   // Update state
   state[conf].conference[slotIndex] = { ...winner, game: 'conference' };
 }
 
-
-
 // ===============================
-// UPDATE SUPER BOWL (SAFE)
+// UPDATE SUPER BOWL
 // ===============================
 function updateSuperBowl() {
   const sb = document.querySelector('[data-game="SB"]');
@@ -153,19 +134,14 @@ function handleTeamClick(teamDiv) {
 
   const gameId = matchup.dataset.game;
 
-  matchup.querySelectorAll('.team').forEach(t =>
-    t.classList.remove('selected')
-  );
+  matchup.querySelectorAll('.team').forEach(t => t.classList.remove('selected'));
   teamDiv.classList.add('selected');
 
   // --- Wild Card ---
   if (wildCardConfs[gameId]) {
     const conf = wildCardConfs[gameId];
 
-    state[conf].wildCard = state[conf].wildCard.filter(
-      t => t.game !== gameId
-    );
-
+    state[conf].wildCard = state[conf].wildCard.filter(t => t.game !== gameId);
     state[conf].wildCard.push({
       name: teamDiv.dataset.team,
       seed: +teamDiv.dataset.seed,
@@ -184,6 +160,7 @@ function handleTeamClick(teamDiv) {
       name: teamDiv.dataset.team,
       seed: +teamDiv.dataset.seed
     });
+
     return;
   }
 
@@ -207,8 +184,10 @@ document.querySelectorAll('.team').forEach(team =>
   team.addEventListener('click', () => handleTeamClick(team))
 );
 
+// ===============================
+// SHARE BUTTON
+// ===============================
 document.getElementById('share-btn').addEventListener('click', async () => {
-  // Build a simple text summary of your bracket
   const afcConf = state.afc.conference.map(t => `#${t.seed} ${t.name}`).join(' vs ');
   const nfcConf = state.nfc.conference.map(t => `#${t.seed} ${t.name}`).join(' vs ');
   const sb = state.afc.conference[0] && state.nfc.conference[0]
@@ -218,7 +197,7 @@ document.getElementById('share-btn').addEventListener('click', async () => {
   const shareData = {
     title: 'My 2026 NFL Bracket',
     text: `AFC: ${afcConf}\nNFC: ${nfcConf}\n${sb}`,
-    url: window.location.href // optional: share the current page link
+    url: window.location.href
   };
 
   try {
