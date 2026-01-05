@@ -8,14 +8,15 @@ body {
 
 #bracket {
   display: grid;
-  grid-template-columns: repeat(4, 220px);  /* 4 rounds */
-  grid-template-rows: repeat(16, 60px);     /* 16 rows for precise spacing */
-  gap: 10px;
+  grid-template-columns: repeat(4, 220px); /* 4 rounds */
+  grid-auto-rows: 80px; /* automatic row height for spacing */
+  gap: 20px;
+  justify-items: center; /* center all items horizontally in their columns */
+  align-items: center;   /* center all items vertically in their rows */
 }
 
-/* Round labels */
+/* Round headings */
 .round-label {
-  text-align: center;
   font-size: 18px;
   font-weight: bold;
   display: flex;
@@ -31,21 +32,22 @@ body {
   background-color: #fff;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center; /* center text */
+  justify-content: center; /* center teams vertically */
+  align-items: center;     /* center teams horizontally */
   padding: 5px;
-  margin: 0 auto;
+  box-sizing: border-box;
 }
 
-/* Teams */
+/* Teams inside matchups */
 .team {
+  width: 100%;
   padding: 8px 10px;
   margin: 2px 0;
   border-radius: 4px;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: center; /* center text */
   font-size: 14px;
   border: 1px solid #ccc;
   background-color: #fafafa;
@@ -69,21 +71,16 @@ body {
   object-fit: contain;
 }
 
-/* ===== Centering matchups vertically ===== */
+/* ===== Auto-center Divisional, Conference, Super Bowl vertically ===== */
+.matchup[data-game^="AFC-D"],
+.matchup[data-game^="NFC-D"] {
+  justify-self: center; /* center in column */
+}
 
-/* --- AFC Divisional --- */
-[data-game="AFC-D1"] { grid-row: 1 / span 4; justify-self: center; }
-[data-game="AFC-D2"] { grid-row: 5 / span 4; justify-self: center; }
+.matchup[data-game$="-Conf"] {
+  justify-self: center;
+}
 
-/* --- NFC Divisional --- */
-[data-game="NFC-D1"] { grid-row: 9 / span 4; justify-self: center; }
-[data-game="NFC-D2"] { grid-row: 13 / span 4; justify-self: center; }
-
-/* --- AFC Conference --- */
-[data-game="AFC-Conf"] { grid-row: 3 / span 6; justify-self: center; }
-
-/* --- NFC Conference --- */
-[data-game="NFC-Conf"] { grid-row: 11 / span 6; justify-self: center; }
-
-/* --- Super Bowl --- */
-[data-game="SB"] { grid-row: 7 / span 6; justify-self: center; }
+.matchup[data-game="SB"] {
+  justify-self: center;
+}
