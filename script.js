@@ -65,23 +65,35 @@ function updateDivisional(conf) {
   const winners = [...state[conf].wildCard].sort(sortBySeed);
   if (winners.length === 0) return;
 
-  const div1 = document.querySelector(`[data-game="${conf.toUpperCase()}-D1"]`);
-  const div2 = document.querySelector(`[data-game="${conf.toUpperCase()}-D2"]`);
+  const divMatchups = [
+    document.querySelector(`[data-game="${conf.toUpperCase()}-D1"]`),
+    document.querySelector(`[data-game="${conf.toUpperCase()}-D2"]`)
+  ];
 
-  const div1Slots = div1.querySelectorAll('.team');
-  const div2Slots = div2.querySelectorAll('.team');
+  const first = firstSeed[conf];
 
-  const lowest = winners[winners.length - 1];
-  const remaining = winners.filter(t => t.name !== lowest.name);
+  // --- DIV 1: first seed vs lowest ---
+  const lowest = winners[winners.length - 1]; // lowest seed
+  const remaining = winners.filter(t => t !== lowest);
 
-  // Divisional Game 1: #1 seed vs lowest
-  fillTeamSlot(div1Slots[0], firstSeed[conf]);
-  fillTeamSlot(div1Slots[1], lowest);
+  // Clear div1 but preserve first seed
+  divMatchups[0].innerHTML = '';
+  divMatchups[0].appendChild(createTeamElement(first.name, first.seed, first.logo));
+  if (lowest) {
+    divMatchups[0].appendChild(
+      createTeamElement(lowest.name, lowest.seed, `logos/${lowest.name.toLowerCase()}.svg`)
+    );
+  }
 
-  // Divisional Game 2: remaining two
-  fillTeamSlot(div2Slots[0], remaining[0]);
-  fillTeamSlot(div2Slots[1], remaining[1]);
+  // --- DIV 2: remaining teams ---
+  divMatchups[1].innerHTML = '';
+  remaining.forEach(t =>
+    divMatchups[1].appendChild(
+      createTeamElement(t.name, t.seed, `logos/${t.name.toLowerCase()}.svg`)
+    )
+  );
 }
+
 
 // ===============================
 // UPDATE CONFERENCE (SAFE)
