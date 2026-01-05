@@ -11,13 +11,12 @@
 
 <div id="bracket">
 
-  <!-- AFC -->
-  <div class="conference">
+  <!-- AFC SIDE -->
+  <div class="side afc">
     <h2>AFC</h2>
 
-    <div class="round">
-      <h3>Wild Card</h3>
-
+    <div class="grid">
+      <!-- Wild Card -->
       <div class="game" data-next="afc-div-1">
         <button class="team">#2 Bills</button>
         <button class="team">#7 Steelers</button>
@@ -32,28 +31,29 @@
         <button class="team">#4 Texans</button>
         <button class="team">#5 Browns</button>
       </div>
-    </div>
 
-    <div class="round">
-      <h3>Divisional</h3>
+      <!-- Divisional -->
       <div id="afc-div-1" class="slot"></div>
       <div id="afc-div-2" class="slot"></div>
-      <div id="afc-div-3" class="slot">#1 Ravens (BYE)</div>
-    </div>
+      <div id="afc-div-3" class="slot">#1 Ravens</div>
 
-    <div class="round">
-      <h3>AFC Champion</h3>
-      <div id="afc-champ" class="slot"></div>
+      <!-- AFC Champ -->
+      <div id="afc-champ" class="slot champ"></div>
     </div>
   </div>
 
-  <!-- NFC -->
-  <div class="conference">
+  <!-- SUPER BOWL -->
+  <div class="superbowl">
+    <h2>Super Bowl</h2>
+    <div id="superbowl-slot" class="slot champ"></div>
+  </div>
+
+  <!-- NFC SIDE -->
+  <div class="side nfc">
     <h2>NFC</h2>
 
-    <div class="round">
-      <h3>Wild Card</h3>
-
+    <div class="grid">
+      <!-- Wild Card -->
       <div class="game" data-next="nfc-div-1">
         <button class="team">#2 Cowboys</button>
         <button class="team">#7 Packers</button>
@@ -68,33 +68,19 @@
         <button class="team">#4 Buccaneers</button>
         <button class="team">#5 Eagles</button>
       </div>
-    </div>
 
-    <div class="round">
-      <h3>Divisional</h3>
+      <!-- Divisional -->
       <div id="nfc-div-1" class="slot"></div>
       <div id="nfc-div-2" class="slot"></div>
-      <div id="nfc-div-3" class="slot">#1 49ers (BYE)</div>
-    </div>
+      <div id="nfc-div-3" class="slot">#1 49ers</div>
 
-    <div class="round">
-      <h3>NFC Champion</h3>
-      <div id="nfc-champ" class="slot"></div>
+      <!-- NFC Champ -->
+      <div id="nfc-champ" class="slot champ"></div>
     </div>
-  </div>
-
-  <!-- Super Bowl -->
-  <div class="conference">
-    <h2>Super Bowl</h2>
-    <div id="superbowl" class="slot"></div>
   </div>
 
 </div>
 
-<button id="download">Download Bracket</button>
-
-<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="script.js"></script>
-
 </body>
 </html>
