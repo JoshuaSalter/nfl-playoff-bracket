@@ -174,3 +174,11 @@ function handleTeamClick(teamDiv) {
 document.querySelectorAll('.team').forEach(team =>
   team.addEventListener('click', () => handleTeamClick(team))
 );
+
+// ===============================
+// PRINT BRACKET
+// ===============================
+document.getElementById('printBracket').addEventListener('click', () => {
+  window.print();
+});
+
