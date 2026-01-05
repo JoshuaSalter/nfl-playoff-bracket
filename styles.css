@@ -118,11 +118,12 @@ body {
 
 /* Selected / winner */
 .team.selected {
-  background: #00bfff;
-  color: #fff;
-  border-color: #008ecf;
+  background: #cceeff;   /* pale blue */
+  color: #000;           /* darker text for contrast */
+  border-color: #99ddff;
   font-weight: bold;
 }
+
 
 /* =========================
    EMPTY TEAMS
