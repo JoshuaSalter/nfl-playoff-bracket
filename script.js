@@ -83,18 +83,19 @@ function propagateNextRound(matchup) {
 
   if (!nextMatchup) return;
 
-  const teamElements = Array.from(matchup.children).filter(t => t.dataset.team);
-  teamElements.forEach(teamEl => {
-    // Find the slot to fill in the next matchup
-    if (!nextMatchup.children[0].textContent) slotIndex = 0;
-    else if (!nextMatchup.children[1].textContent) slotIndex = 1;
-    else return;
+  // Only propagate the selected team
+  const selectedTeam = matchup.querySelector('.team.selected');
+  if (!selectedTeam) return;
 
-    const slot = nextMatchup.children[slotIndex];
-    slot.textContent = teamEl.textContent;
-    slot.dataset.team = teamEl.dataset.team;
-    slot.dataset.seed = teamEl.dataset.seed;
-  });
+  // Find the slot to fill in the next matchup
+  if (!nextMatchup.children[0].textContent) slotIndex = 0;
+  else if (!nextMatchup.children[1].textContent) slotIndex = 1;
+  else return;
+
+  const slot = nextMatchup.children[slotIndex];
+  slot.textContent = selectedTeam.textContent;
+  slot.dataset.team = selectedTeam.dataset.team;
+  slot.dataset.seed = selectedTeam.dataset.seed;
 }
 
 // Add click events
