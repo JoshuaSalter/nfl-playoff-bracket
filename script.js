@@ -24,15 +24,6 @@ const firstSeed = {
 };
 
 
-// Map Wild Card games to conferences
-const wildCardConfs = {
-  'AFC-WC1': 'afc',
-  'AFC-WC2': 'afc',
-  'AFC-WC3': 'afc',
-  'NFC-WC1': 'nfc',
-  'NFC-WC2': 'nfc',
-  'NFC-WC3': 'nfc'
-};
 // ===============================
 // HELPER FUNCTIONS
 // ===============================
@@ -61,9 +52,16 @@ function createTeamElement(team) {
 }
 
 // Fill a matchup slot with a team object
+//function fillTeamSlot(slot, team) {
+ // slot.innerHTML = '';
+ // slot.replaceWith(createTeamElement(team));
+}
+
+
+// Fill a slot with a team safely
 function fillTeamSlot(slot, team) {
   slot.innerHTML = '';
-  slot.replaceWith(createTeamElement(team));
+  slot.appendChild(createTeamElement(team));
 }
 
 // ===============================
