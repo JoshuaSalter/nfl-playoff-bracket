@@ -4,13 +4,13 @@
 const state = {
   afc: {
     wildCard: [],        // Wild Card winners
-    divisional: [null, null, null, null], // DIV1 and DIV2 slots
-    conference: [null, null]  // Conference winners
+    divisional: [],      // Divisional matchups (including first seed)
+    conference: null     // Conference winner
   },
   nfc: {
     wildCard: [],
-    divisional: [null, null, null, null],
-    conference: [null, null]
+    divisional: [],
+    conference: null
   }
 };
 
