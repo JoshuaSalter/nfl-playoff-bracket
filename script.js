@@ -4,37 +4,27 @@
 const state = {
   afc: {
     wildCard: [],        // Wild Card winners
-    divisional: [null, null, null, null], // DIV1 and DIV2 slots
-    conference: [null, null]  // Conference winners
+    divisional: [],      // Divisional matchups (including first seed)
+    conference: null     // Conference winner
   },
   nfc: {
     wildCard: [],
-    divisional: [null, null, null, null],
-    conference: [null, null]
+    divisional: [],
+    conference: null
   }
 };
 
-// First seed teams
+// ===============================
+// FIRST SEED TEAMS
+// ===============================
 const firstSeed = {
   afc: { name: 'Broncos', seed: 1, logo: 'logos/broncos.svg' },
   nfc: { name: 'Seahawks', seed: 1, logo: 'logos/seahawks.svg' }
 };
 
-// Map Wild Card games to conferences
-const wildCardConfs = {
-  'AFC-WC1': 'afc',
-  'AFC-WC2': 'afc',
-  'AFC-WC3': 'afc',
-  'NFC-WC1': 'nfc',
-  'NFC-WC2': 'nfc',
-  'NFC-WC3': 'nfc'
-};
-
 // ===============================
 // HELPER FUNCTIONS
 // ===============================
-
-// Create a team element with logo + seed text
 function createTeamElement(team) {
   const teamDiv = document.createElement('div');
   teamDiv.classList.add('team');
@@ -56,83 +46,92 @@ function createTeamElement(team) {
 
   teamDiv.append(img, span);
   teamDiv.addEventListener('click', () => handleTeamClick(teamDiv));
-
   return teamDiv;
 }
 
-// Fill a slot with a team safely
+// Fill a matchup slot with a team object
 function fillTeamSlot(slot, team) {
   slot.innerHTML = '';
-  slot.appendChild(createTeamElement(team));
+  slot.replaceWith(createTeamElement(team));
 }
 
 // ===============================
-// UPDATE DIVISIONAL MATCHUPS
+// WILD CARD → DIVISIONAL
 // ===============================
 function updateDivisional(conf) {
   const winners = [...state[conf].wildCard].sort((a, b) => a.seed - b.seed);
 
-  const divMatchups = conf === 'afc'
-    ? [document.querySelector('[data-game="AFC-D1"]'), document.querySelector('[data-game="AFC-D2"]')]
-    : [document.querySelector('[data-game="NFC-D1"]'), document.querySelector('[data-game="NFC-D2"]')];
+  const div1 = document.querySelector(`[data-game="${conf.toUpperCase()}-D1"]`);
+  const div2 = document.querySelector(`[data-game="${conf.toUpperCase()}-D2"]`);
 
-  // Slot 0 = First seed vs lowest remaining winner
-  const lowest = winners[winners.length - 1] || null;
+  // Automatically add first seed to DIV1 slot 0
   state[conf].divisional[0] = firstSeed[conf];
-  state[conf].divisional[1] = lowest;
+  state[conf].divisional[1] = winners[winners.length - 1] || null; // lowest seed plays first seed
 
-  fillTeamSlot(divMatchups[0].children[0], firstSeed[conf]);
-  fillTeamSlot(divMatchups[0].children[1], lowest);
+  fillTeamSlot(div1.children[0], state[conf].divisional[0]);
+  fillTeamSlot(div1.children[1], state[conf].divisional[1]);
 
-  // Slot 2 & 3 = remaining winners
-  const remaining = winners.filter(t => t && t !== lowest);
+  // Remaining two winners in DIV2
+  const remaining = winners.filter(t => t !== state[conf].divisional[1]);
   state[conf].divisional[2] = remaining[0] || null;
   state[conf].divisional[3] = remaining[1] || null;
 
-  fillTeamSlot(divMatchups[1].children[0], remaining[0] || null);
-  fillTeamSlot(divMatchups[1].children[1], remaining[1] || null);
+  fillTeamSlot(div2.children[0], remaining[0] || null);
+  fillTeamSlot(div2.children[1], remaining[1] || null);
 }
 
 // ===============================
-// UPDATE CONFERENCE MATCHUPS
+// DIVISIONAL → CONFERENCE
 // ===============================
 function updateConference(conf) {
-  const divMatchups = conf === 'afc'
-    ? [document.querySelector('[data-game="AFC-D1"]'), document.querySelector('[data-game="AFC-D2"]')]
-    : [document.querySelector('[data-game="NFC-D1"]'), document.querySelector('[data-game="NFC-D2"]')];
+  const div1 = document.querySelector(`[data-game="${conf.toUpperCase()}-D1"]`);
+  const div2 = document.querySelector(`[data-game="${conf.toUpperCase()}-D2"]`);
+  const confMatchup = document.querySelector(`[data-game="${conf.toUpperCase()}-Conf"]`);
 
-  const confMatchup = conf === 'afc'
-    ? document.querySelector('[data-game="AFC-Conf"]')
-    : document.querySelector('[data-game="NFC-Conf"]');
+  // Only propagate selected winners
+  const winner1 = div1.querySelector('.team.selected');
+  const winner2 = div2.querySelector('.team.selected');
 
-  divMatchups.forEach((div, idx) => {
-    const winnerEl = Array.from(div.children).find(c => c.classList.contains('selected'));
-    const winner = winnerEl
-      ? {
-          name: winnerEl.dataset.team,
-          seed: +winnerEl.dataset.seed,
-          logo: winnerEl.querySelector('img')?.src
-        }
-      : null;
+  const teams = [
+    winner1 ? { 
+      name: winner1.dataset.team, 
+      seed: +winner1.dataset.seed, 
+      logo: winner1.querySelector('img')?.src 
+    } : null,
+    winner2 ? { 
+      name: winner2.dataset.team, 
+      seed: +winner2.dataset.seed, 
+      logo: winner2.querySelector('img')?.src 
+    } : null
+  ];
 
-    state[conf].conference[idx] = winner;
-    fillTeamSlot(confMatchup.children[idx], winner);
-  });
-
-  updateSuperBowl();
+  fillTeamSlot(confMatchup.children[0], teams[0]);
+  fillTeamSlot(confMatchup.children[1], teams[1]);
 }
 
 // ===============================
-// UPDATE SUPER BOWL
+// CONFERENCE → SUPER BOWL
 // ===============================
 function updateSuperBowl() {
-  const sbMatchup = document.querySelector('[data-game="SB"]');
-  // Ensure it has exactly 2 slots
-  while (sbMatchup.children.length < 2) sbMatchup.appendChild(document.createElement('div'));
-  while (sbMatchup.children.length > 2) sbMatchup.removeChild(sbMatchup.lastChild);
+  const sb = document.querySelector('[data-game="SB"]');
+  const afcWinner = document.querySelector('[data-game="AFC-Conf"] .team.selected');
+  const nfcWinner = document.querySelector('[data-game="NFC-Conf"] .team.selected');
 
-  fillTeamSlot(sbMatchup.children[0], state.afc.conference[0]);
-  fillTeamSlot(sbMatchup.children[1], state.nfc.conference[0]);
+  const teams = [
+    afcWinner ? { 
+      name: afcWinner.dataset.team, 
+      seed: +afcWinner.dataset.seed, 
+      logo: afcWinner.querySelector('img')?.src 
+    } : null,
+    nfcWinner ? { 
+      name: nfcWinner.dataset.team, 
+      seed: +nfcWinner.dataset.seed, 
+      logo: nfcWinner.querySelector('img')?.src 
+    } : null
+  ];
+
+  fillTeamSlot(sb.children[0], teams[0]);
+  fillTeamSlot(sb.children[1], teams[1]);
 }
 
 // ===============================
@@ -140,49 +139,45 @@ function updateSuperBowl() {
 // ===============================
 function handleTeamClick(teamDiv) {
   const matchup = teamDiv.closest('.matchup');
-  if (!matchup || !matchup.dataset.game) return;
-
-  const gameId = matchup.dataset.game;
-  const conf = gameId.startsWith('AFC') ? 'afc' : 'nfc';
+  if (!matchup) return;
 
   // Deselect if already selected
-  const alreadySelected = teamDiv.classList.contains('selected');
-  matchup.querySelectorAll('.team').forEach(t => t.classList.remove('selected'));
-  if (!alreadySelected) teamDiv.classList.add('selected');
+  if (teamDiv.classList.contains('selected')) {
+    teamDiv.classList.remove('selected');
+  } else {
+    matchup.querySelectorAll('.team').forEach(t => t.classList.remove('selected'));
+    teamDiv.classList.add('selected');
+  }
 
-  // --- Wild Card ---
-  if (wildCardConfs[gameId]) {
-    const winner = alreadySelected ? null : {
-      name: teamDiv.dataset.team,
-      seed: +teamDiv.dataset.seed,
-      logo: teamDiv.querySelector('img')?.src
+  const gameId = matchup.dataset.game;
+
+  // Wild Card winners
+  if (gameId.includes('WC')) {
+    const conf = gameId.startsWith('AFC') ? 'afc' : 'nfc';
+    const winner = { 
+      name: teamDiv.dataset.team, 
+      seed: +teamDiv.dataset.seed, 
+      logo: teamDiv.querySelector('img')?.src 
     };
-
-    // Remove any previous winner from this game
-    state[conf].wildCard = state[conf].wildCard.filter(t => t?.gameId !== gameId);
-    if (winner) winner.gameId = gameId;
-    if (winner) state[conf].wildCard.push(winner);
-
+    state[conf].wildCard = state[conf].wildCard.filter(t => t && t.name !== winner.name);
+    state[conf].wildCard.push(winner);
     updateDivisional(conf);
-    updateConference(conf); // propagate changes immediately
-    return;
   }
 
-  // --- Divisional ---
-  if (gameId.includes('D')) {
+  // Divisional → Conference
+  if (gameId.includes('-D')) {
+    const conf = gameId.startsWith('AFC') ? 'afc' : 'nfc';
     updateConference(conf);
-    return;
   }
 
-  // --- Conference ---
+  // Conference → Super Bowl
   if (gameId.includes('Conf')) {
     updateSuperBowl();
-    return;
   }
 }
 
 // ===============================
-// INITIALIZE EXISTING TEAMS
+// INITIALIZE ALL EXISTING TEAMS
 // ===============================
 document.querySelectorAll('.team').forEach(team => {
   team.addEventListener('click', () => handleTeamClick(team));
@@ -196,12 +191,10 @@ document.getElementById('share-btn').addEventListener('click', async () => {
   html2canvas(bracketEl, { backgroundColor: '#fff', useCORS: true, imageTimeout: 3000 }).then(canvas => {
     canvas.toBlob(async blob => {
       const file = new File([blob], 'NFL-Bracket-2026.png', { type: 'image/png' });
+
       if (navigator.canShare && navigator.canShare({ files: [file] })) {
-        try {
-          await navigator.share({ files: [file], title: 'My 2026 NFL Bracket' });
-        } catch (err) {
-          console.error('Error sharing:', err);
-        }
+        try { await navigator.share({ files: [file], title: 'My 2026 NFL Bracket' }); } 
+        catch(err){ console.error('Error sharing:', err); }
       } else {
         const link = document.createElement('a');
         link.href = URL.createObjectURL(file);
