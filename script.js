@@ -23,6 +23,16 @@ const firstSeed = {
   nfc: { name: 'Seahawks', seed: 1, logo: 'logos/seahawks.svg' }
 };
 
+
+// Map Wild Card games to conferences
+const wildCardConfs = {
+  'AFC-WC1': 'afc',
+  'AFC-WC2': 'afc',
+  'AFC-WC3': 'afc',
+  'NFC-WC1': 'nfc',
+  'NFC-WC2': 'nfc',
+  'NFC-WC3': 'nfc'
+};
 // ===============================
 // HELPER FUNCTIONS
 // ===============================
