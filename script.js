@@ -4,15 +4,16 @@
 const state = {
   afc: {
     wildCard: [],        // Wild Card winners
-    divisional: [],      // Divisional matchups (including first seed)
-    conference: null     // Conference winner
+    divisional: [null, null, null, null], // DIV1 and DIV2 slots
+    conference: [null, null]  // Conference winners
   },
   nfc: {
     wildCard: [],
-    divisional: [],
-    conference: null
+    divisional: [null, null, null, null],
+    conference: [null, null]
   }
 };
+
 
 // ===============================
 // FIRST SEED TEAMS
