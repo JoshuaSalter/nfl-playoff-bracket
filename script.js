@@ -1,188 +1,159 @@
-// ===============================
-// FULL STATE
-// ===============================
-const state = {
-  afc: {
-    wildCard: [],          // 3 winners from WC
-    divisional: [null, null, null, null], // 1st seed + 3 winners
-    conference: [null, null],            // 2 divisional winners
-  },
-  nfc: {
-    wildCard: [],
-    divisional: [null, null, null, null],
-    conference: [null, null],
-  },
-  superBowl: [null, null] // [AFC winner, NFC winner]
-};
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026 NFL Playoff Bracket</title>
+<link rel="stylesheet" href="styles.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
 
-// First seed teams for automatic placement
-const firstSeed = {
-  afc: { name: 'Broncos', seed: 1, logo: 'logos/broncos.svg' },
-  nfc: { name: 'Seahawks', seed: 1, logo: 'logos/seahawks.svg' }
-};
+<div id="bracket-wrapper">
+  <div id="bracket">
 
-// Map Wild Card games to conferences
-const wildCardConfs = {
-  'AFC-WC1': 'afc',
-  'AFC-WC2': 'afc',
-  'AFC-WC3': 'afc',
-  'NFC-WC1': 'nfc',
-  'NFC-WC2': 'nfc',
-  'NFC-WC3': 'nfc'
-};
+    <!-- ===== Wild Card ===== -->
+    <div class="round">
+      <div class="round-label">Wild Card</div>
+      <div class="round-stack">
 
-// ===============================
-// CREATE TEAM ELEMENT
-// ===============================
-function fillTeamSlot(slot, team) {
-  slot.innerHTML = '';
-  slot.classList.add('empty');
+        <!-- AFC -->
+        <div class="matchup" data-game="AFC-WC1">
+          <div class="team" data-team="Patriots" data-seed="2" data-logo="logos/patriots.svg">
+            <img class="logo" src="logos/patriots.svg" alt="Patriots">
+            <span>#2 Patriots</span>
+          </div>
+          <div class="team" data-team="Chargers" data-seed="7" data-logo="logos/chargers.svg">
+            <img class="logo" src="logos/chargers.svg" alt="Chargers">
+            <span>#7 Chargers</span>
+          </div>
+        </div>
 
-  if (!team) return;
+        <div class="matchup" data-game="AFC-WC2">
+          <div class="team" data-team="Jaguars" data-seed="3" data-logo="logos/jaguars.svg">
+            <img class="logo" src="logos/jaguars.svg" alt="Jaguars">
+            <span>#3 Jaguars</span>
+          </div>
+          <div class="team" data-team="Bills" data-seed="6" data-logo="logos/bills.svg">
+            <img class="logo" src="logos/bills.svg" alt="Bills">
+            <span>#6 Bills</span>
+          </div>
+        </div>
 
-  const teamDiv = document.createElement('div');
-  teamDiv.classList.add('team');
-  teamDiv.dataset.team = team.name;
-  teamDiv.dataset.seed = team.seed;
+        <div class="matchup" data-game="AFC-WC3">
+          <div class="team" data-team="Steelers" data-seed="4" data-logo="logos/steelers.svg">
+            <img class="logo" src="logos/steelers.svg" alt="Steelers">
+            <span>#4 Steelers</span>
+          </div>
+          <div class="team" data-team="Texans" data-seed="5" data-logo="logos/texans.svg">
+            <img class="logo" src="logos/texans.svg" alt="Texans">
+            <span>#5 Texans</span>
+          </div>
+        </div>
 
-  const img = document.createElement('img');
-  img.src = team.logo || `logos/${team.name.toLowerCase()}.svg`;
-  img.alt = team.name;
-  img.classList.add('logo');
+        <div class="spacer"></div>
 
-  const span = document.createElement('span');
-  span.textContent = `#${team.seed} ${team.name}`;
+        <!-- NFC -->
+        <div class="matchup" data-game="NFC-WC1">
+          <div class="team" data-team="Bears" data-seed="2" data-logo="logos/bears.svg">
+            <img class="logo" src="logos/bears.svg" alt="Bears">
+            <span>#2 Bears</span>
+          </div>
+          <div class="team" data-team="Packers" data-seed="7" data-logo="logos/packers.svg">
+            <img class="logo" src="logos/packers.svg" alt="Packers">
+            <span>#7 Packers</span>
+          </div>
+        </div>
 
-  teamDiv.append(img, span);
-  slot.appendChild(teamDiv);
-  slot.classList.remove('empty');
+        <div class="matchup" data-game="NFC-WC2">
+          <div class="team" data-team="Eagles" data-seed="3" data-logo="logos/eagles.svg">
+            <img class="logo" src="logos/eagles.svg" alt="Eagles">
+            <span>#3 Eagles</span>
+          </div>
+          <div class="team" data-team="49ers" data-seed="6" data-logo="logos/49ers.svg">
+            <img class="logo" src="logos/49ers.svg" alt="49ers">
+            <span>#6 49ers</span>
+          </div>
+        </div>
 
-  teamDiv.addEventListener('click', () => handleTeamClick(slot, team));
-}
+        <div class="matchup" data-game="NFC-WC3">
+          <div class="team" data-team="Panthers" data-seed="4" data-logo="logos/panthers.svg">
+            <img class="logo" src="logos/panthers.svg" alt="Panthers">
+            <span>#4 Panthers</span>
+          </div>
+          <div class="team" data-team="Rams" data-seed="5" data-logo="logos/rams.svg">
+            <img class="logo" src="logos/rams.svg" alt="Rams">
+            <span>#5 Rams</span>
+          </div>
+        </div>
 
-// ===============================
-// HANDLE TEAM CLICK
-// ===============================
-function handleTeamClick(slot, team) {
-  const matchup = slot.parentElement;
-  const gameId = matchup.dataset.game;
+      </div>
+    </div>
 
-  // Ignore clicks on empty slots
-  if (!team) return;
+    <!-- ===== Divisional ===== -->
+    <div class="round">
+      <div class="round-label">Divisional</div>
+      <div class="round-stack">
 
-  const conf = gameId.startsWith('AFC') ? 'afc' : gameId.startsWith('NFC') ? 'nfc' : null;
-  if (!conf) return;
+        <div class="matchup" data-game="AFC-D1">
+          <div class="team" data-team="Broncos" data-seed="1" data-logo="logos/broncos.svg">
+            <img class="logo" src="logos/broncos.svg" alt="Broncos">
+            <span>#1 Broncos</span>
+          </div>
+          <div class="team empty"></div>
+        </div>
 
-  if (gameId.includes('WC')) updateWinner(state[conf].wildCard, team, 3);
-  else if (gameId.includes('D')) updateWinner(state[conf].divisional, team, 4);
-  else if (gameId.includes('Conf')) updateWinner(state[conf].conference, team, 2);
+        <div class="matchup" data-game="AFC-D2">
+          <div class="team empty"></div>
+          <div class="team empty"></div>
+        </div>
 
-  recalcBracket();
-}
+        <div class="matchup" data-game="NFC-D1">
+          <div class="team" data-team="Seahawks" data-seed="1" data-logo="logos/seahawks.svg">
+            <img class="logo" src="logos/seahawks.svg" alt="Seahawks">
+            <span>#1 Seahawks</span>
+          </div>
+          <div class="team empty"></div>
+        </div>
 
-// ===============================
-// UPDATE WINNER HELPER
-// ===============================
-function updateWinner(array, team, max) {
-  const index = array.findIndex(t => t && t.name === team.name);
+        <div class="matchup" data-game="NFC-D2">
+          <div class="team empty"></div>
+          <div class="team empty"></div>
+        </div>
 
-  // If already selected, deselect
-  if (index !== -1) {
-    array[index] = null;
-    return;
-  }
+      </div>
+    </div>
 
-  // Add to first available slot
-  for (let i = 0; i < max; i++) {
-    if (!array[i]) {
-      array[i] = team;
-      break;
-    }
-  }
-}
+    <!-- ===== Conference ===== -->
+    <div class="round">
+      <div class="round-label">Conference</div>
+      <div class="round-stack">
+        <div class="matchup" data-game="AFC-Conf">
+          <div class="team empty"></div>
+          <div class="team empty"></div>
+        </div>
+        <div class="matchup" data-game="NFC-Conf">
+          <div class="team empty"></div>
+          <div class="team empty"></div>
+        </div>
+      </div>
+    </div>
 
-// ===============================
-// RECALCULATE FULL BRACKET
-// ===============================
-function recalcBracket() {
-  ['afc','nfc'].forEach(conf => {
-    // First seed always in Div1 slot0
-    state[conf].divisional[0] = firstSeed[conf];
+    <!-- ===== Super Bowl ===== -->
+    <div class="round">
+      <div class="round-label">Super Bowl</div>
+      <div class="round-stack">
+        <div class="matchup" data-game="SB">
+          <div class="team empty"></div>
+          <div class="team empty"></div>
+        </div>
+      </div>
+    </div>
 
-    // ----------------------
-    // Wild Card → Divisional
-    // ----------------------
-    const wcWinners = state[conf].wildCard;
-    const divMatchups = conf==='afc'
-      ? [document.querySelector('[data-game="AFC-D1"]'), document.querySelector('[data-game="AFC-D2"]')]
-      : [document.querySelector('[data-game="NFC-D1"]'), document.querySelector('[data-game="NFC-D2"]')];
+  </div>
+</div>
 
-    // DIV1 = first seed vs lowest remaining winner
-    const lowest = wcWinners[wcWinners.length-1] || null;
-    fillTeamSlot(divMatchups[0].children[0], firstSeed[conf]);
-    fillTeamSlot(divMatchups[0].children[1], lowest);
-
-    const remaining = wcWinners.filter(t => t && t !== lowest);
-    fillTeamSlot(divMatchups[1].children[0], remaining[0] || null);
-    fillTeamSlot(divMatchups[1].children[1], remaining[1] || null);
-
-    // ----------------------
-    // Divisional → Conference
-    // ----------------------
-    const confMatchup = conf==='afc'
-      ? document.querySelector('[data-game="AFC-Conf"]')
-      : document.querySelector('[data-game="NFC-Conf"]');
-
-    state[conf].conference.forEach((winner, idx) => {
-      fillTeamSlot(confMatchup.children[idx], winner);
-    });
-
-    // ----------------------
-    // Conference → Super Bowl
-    // ----------------------
-    if (conf==='afc') state.superBowl[0] = state[conf].conference[0] || null;
-    else state.superBowl[1] = state[conf].conference[0] || null;
-  });
-
-  const sb = document.querySelector('[data-game="SB"]');
-  fillTeamSlot(sb.children[0], state.superBowl[0]);
-  fillTeamSlot(sb.children[1], state.superBowl[1]);
-}
-
-// ===============================
-// INITIALIZE EXISTING TEAMS
-// ===============================
-document.querySelectorAll('.team').forEach(team => {
-  const name = team.dataset.team;
-  const seed = parseInt(team.dataset.seed);
-  const logo = team.dataset.logo;
-  if (!name) return;
-  fillTeamSlot(team, { name, seed, logo });
-});
-
-// ===============================
-// SHARE BUTTON
-// ===============================
-document.getElementById('share-btn').addEventListener('click', async () => {
-  const bracketEl = document.getElementById('bracket');
-  html2canvas(bracketEl, { backgroundColor: '#fff', useCORS: true, imageTimeout: 3000 }).then(canvas => {
-    canvas.toBlob(async blob => {
-      const file = new File([blob], 'NFL-Bracket-2026.png', { type: 'image/png' });
-
-      if (navigator.canShare && navigator.canShare({ files: [file] })) {
-        try {
-          await navigator.share({ files: [file], title: 'My 2026 NFL Bracket' });
-        } catch (err) {
-          console.error('Error sharing:', err);
-        }
-      } else {
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(file);
-        link.download = 'NFL-Bracket-2026.png';
-        link.click();
-        URL.revokeObjectURL(link.href);
-        alert('Bracket image downloaded! You can now share it.');
-      }
-    }, 'image/png');
-  });
-});
+<button id="share-btn">Share Bracket</button>
+<script src="script.js"></script>
+</body>
+</html>
